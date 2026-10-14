@@ -1,0 +1,44 @@
+% ============================ TRANG BÌA ==============================
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{tikzpicture}[remember picture,overlay]
+  \draw[line width=2.2pt,bkred!80!black]
+    ($(current page.north west)+(2.2cm,-1.7cm)$) rectangle ($(current page.south east)+(-1.5cm,1.7cm)$);
+  \draw[line width=0.6pt,bkred!80!black]
+    ($(current page.north west)+(2.35cm,-1.85cm)$) rectangle ($(current page.south east)+(-1.65cm,1.85cm)$);
+\end{tikzpicture}
+\begin{center}
+\setstretch{1.15}
+\vspace*{-0.4cm}
+{\fontsize{16}{20}\selectfont\bfseries ĐẠI HỌC BÁCH KHOA HÀ NỘI\par}
+\vspace{2pt}
+{\fontsize{15}{19}\selectfont\bfseries TRƯỜNG ĐIỆN -- ĐIỆN TỬ\par}
+\vspace{2pt}
+{\large\raisebox{0.6ex}{\rule{3cm}{0.6pt}}~$\diamond$~\raisebox{0.6ex}{\rule{3cm}{0.6pt}}\par}
+\vspace{1.0cm}
+\IfFileExists{hinh/logo_hust.png}{%
+  \includegraphics[height=4.6cm]{hinh/logo_hust.png}%
+}{%
+  \fbox{\parbox[c][4.6cm][c]{3cm}{\centering\small\sffamily LOGO\\ĐẠI HỌC\\BÁCH KHOA\\HÀ NỘI\\[4pt]\scriptsize(đặt file\\hinh/logo\_hust.png)}}%
+}
+\par\vspace{1.1cm}
+{\fontsize{22}{28}\selectfont\bfseries BÁO CÁO BÀI TẬP LỚN\par}
+\vspace{0.3cm}
+{\fontsize{15}{19}\selectfont\bfseries MÔN HỌC: CẢM BIẾN VÀ XỬ LÝ TÍN HIỆU ĐO\par}
+\vspace{1.1cm}
+{\fontsize{14}{18}\selectfont\itshape Đề tài:\par}
+\vspace{0.2cm}
+\parbox{0.86\textwidth}{\centering\fontsize{17}{23}\selectfont\bfseries\color{bkred!85!black}
+  THIẾT KẾ MẠCH CẢM BIẾN PHÁT HIỆN CHUYỂN ĐỘNG PIR SỬ DỤNG LHI778}
+\par\vspace{1.6cm}
+{\fontsize{14}{20}\selectfont
+\begin{tabular}{@{}l@{\hspace{0.8cm}}l@{}}
+  \textbf{Học viên:}        & Nguyễn Thái Sơn \\
+  \textbf{MSHV:}            & 20252373M \\
+  \textbf{GVHD:}            & TS. Nguyễn Hoàng Nam \\
+\end{tabular}\par}
+\vfill
+{\fontsize{14}{18}\selectfont\itshape Hà Nội, ngày 28 tháng 9 năm 2026.\par}
+\vspace*{0.2cm}
+\end{center}
+\end{titlepage}

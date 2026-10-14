@@ -1,0 +1,356 @@
+% ---------------------------------------------------------------------
+\section{Hiệu ứng nhiệt điện -- nguyên lý đo của cảm biến}
+\label{sec:hieuung}
+% ---------------------------------------------------------------------
+
+\subsection{Vật liệu nhiệt điện}
+
+Vật liệu nhiệt điện (pyroelectric) là các tinh thể hoặc gốm sắt điện có \emph{phân cực điện tự phát} $P_s$: ngay cả khi không có điện trường ngoài, các lưỡng cực điện bên trong vật liệu vẫn xếp theo một hướng. Độ lớn của $P_s$ phụ thuộc vào nhiệt độ và giảm dần về 0 khi nhiệt độ tăng tới điểm Curie. Đại lượng đặc trưng cho sự phụ thuộc này là \emph{hệ số nhiệt điện}:
+\begin{equation}
+  p = \left|\frac{\dd P_s}{\dd T}\right| \qquad [\text{C/(m}^2\text{·K)}].
+  \label{eq:pyrocoef}
+\end{equation}
+
+Phần tử cảm biến là một tấm mỏng vật liệu nhiệt điện có diện tích $A$, bề dày $d$, hai mặt phủ điện cực kim loại (hình~\ref{fig:pyroeffect}). Về mặt điện, nó là một tụ điện có điện dung:
+\begin{equation}
+  C_E = \frac{\varepsilon_0\,\varepsilon_r\,A}{d}.
+  \label{eq:CE}
+\end{equation}
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth]
+  % slab
+  \fill[c1!10] (0,0) rectangle (5,1.2);
+  \draw[very thick] (0,0) rectangle (5,1.2);
+  \fill[gray!60] (0,1.2) rectangle (5,1.35);
+  \fill[gray!60] (0,-0.15) rectangle (5,0);
+  \foreach \x in {0.5,1.2,...,4.7} {\draw[->,c1,thick] (\x,0.15) -- (\x,1.05);}
+  \node[c1,fill=c1!10,inner sep=1pt] at (2.5,0.6) {$P_s(T)$};
+  \foreach \x in {0.35,0.9,...,4.8} {\node[c2,font=\scriptsize] at (\x,1.55) {$+$}; \node[c1,font=\scriptsize] at (\x,-0.35) {$-$};}
+  % IR arrows
+  \foreach \x in {1,2,3,4} {\draw[->,c2,decorate,decoration={snake,amplitude=1.5pt,segment length=6pt},thick] (\x,3.0) -- (\x,1.9);}
+  \node[c2,above] at (2.5,3.0) {Bức xạ hồng ngoại $\Phi(t)$};
+  % circuit
+  \draw (5,1.35) -- (6.8,1.35) -- (6.8,0.9);
+  \draw (6.8,0.9) circle (0.35) node {A};
+  \draw (6.8,0.55) -- (6.8,-0.15) -- (5,-0.15);
+  \node[right] at (7.2,0.9) {$i_p = pA\,\dfrac{\dd T}{\dd t}$};
+  \node[below] at (2.5,-0.55) {điện cực dưới};
+  \node[above left] at (0,1.35) {điện cực trên (hấp thụ)};
+  \draw[<->] (-0.4,0) -- node[left] {$d$} (-0.4,1.2);
+\end{tikzpicture}
+\caption{Hiệu ứng nhiệt điện: khi nhiệt độ thay đổi, điện tích trên hai điện cực thay đổi và tạo ra dòng điện ở mạch ngoài}
+\label{fig:pyroeffect}
+\end{figure}
+
+\subsection{Điện tích và dòng nhiệt điện}
+
+Phân cực tự phát tạo ra điện tích liên kết trên hai bề mặt. Ở trạng thái cân bằng, điện tích này bị trung hòa dần bởi điện tích tự do (qua điện trở rò của vật liệu và của mạch ngoài). Khi nhiệt độ phần tử thay đổi một lượng $\Delta T$, phân cực thay đổi, làm xuất hiện một lượng điện tích mới trên điện cực:
+\begin{equation}
+  \Delta Q = p\,A\,\Delta T .
+  \label{eq:deltaQ}
+\end{equation}
+Nếu nối hai điện cực qua mạch ngoài, sẽ có dòng điện chạy qua. Đó là \emph{dòng nhiệt điện}:
+\begin{equation}
+  \boxed{\,i_p(t) = \frac{\dd Q}{\dd t} = p\,A\,\frac{\dd T(t)}{\dd t}\,}
+  \label{eq:ip}
+\end{equation}
+
+Công thức~\eqref{eq:ip} là \textbf{nguyên lý đo} của cảm biến PIR. Nó cho thấy dòng điện tỉ lệ với \emph{tốc độ thay đổi} nhiệt độ, chứ không tỉ lệ với nhiệt độ. Hệ quả:
+\begin{itemize}
+  \item bức xạ không đổi (tường, đồ vật, người đứng yên) $\Rightarrow$ nhiệt độ phần tử không đổi $\Rightarrow$ không có tín hiệu;
+  \item bức xạ thay đổi (người đi vào, đi ra khỏi vùng nhìn) $\Rightarrow$ có tín hiệu.
+\end{itemize}
+
+Bảng~\ref{tab:vatlieu} liệt kê thông số điển hình của một số vật liệu nhiệt điện thường dùng \cite{whatmore,liu-long}. Chỉ số phẩm chất điện áp $F_V = p/(c'\varepsilon_0\varepsilon_r)$ cho biết vật liệu tạo ra điện áp lớn hay nhỏ với cùng một công suất bức xạ.
+
+\begin{table}[!htb]
+\centering
+\caption{Thông số điển hình của một số vật liệu nhiệt điện}
+\label{tab:vatlieu}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.6cm}YYYY@{}}
+\toprule
+\textbf{Vật liệu} & $p$ [$10^{-4}$~C/(m$^2$K)] & $\varepsilon_r$ & $c'$ [$10^{6}$~J/(m$^3$K)] & $F_V$ [m$^2$/C] \\ \midrule
+TGS (triglycine sulphate) & 5,5 & 55 & 2,6 & 0,43 \\
+LiTaO$_3$ (đơn tinh thể) & 2,3 & 47 & 3,2 & 0,17 \\
+Gốm PZT biến tính & 3,8 & 290 & 2,5 & 0,06 \\
+Màng PVDF & 0,27 & 12 & 2,4 & 0,11 \\
+\midrule
+Mô hình \LHI{} (đề tài) & 3,7 & 200 & 2,6 & 0,08 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\LHI{} dùng phần tử bằng gốm nhiệt điện (pyroceramic) \cite{lhi778-ds,pyd1378}. Gốm có $F_V$ không cao bằng TGS, nhưng rẻ, bền, không hút ẩm và dễ gia công. Nhờ bộ khuếch đại FET tích hợp, độ nhạy cuối cùng vẫn đạt vài kV/W.
+
+% ---------------------------------------------------------------------
+\section{Mô hình toán học của đầu thu nhiệt điện}
+\label{sec:mohinhtoan}
+% ---------------------------------------------------------------------
+
+Quá trình biến đổi từ bức xạ sang điện áp gồm ba bước nối tiếp \cite{odon,liu-long}: (1) bức xạ làm phần tử nóng lên, (2) nhiệt độ thay đổi sinh ra dòng nhiệt điện, (3) dòng điện nạp cho điện dung phần tử và tạo ra điện áp. Mỗi bước được mô tả bằng một phương trình vi phân bậc nhất và biểu diễn bằng một mạch tương đương (hình~\ref{fig:tuongduong}).
+
+\begin{figure}[!htb]
+\centering
+\begin{circuitikz}[font=\small]
+  % thermal
+  \draw (0,0) to[I, l=$\eta\Phi(t)$, invert] (0,2.4) -- (1.6,2.4) to[C, l_=$H$] (1.6,0);
+  \draw (1.6,2.4) -- (3.0,2.4) to[R, l=$\dfrac{1}{G}$] (3.0,0) -- (0,0);
+  \draw (3.0,2.4) to[short,-o] (3.6,2.4) node[right] {$T(t)$};
+  \node[ground] at (1.6,0) {};
+  % pyro
+  \draw (6.6,0) to[american controlled current source, invert] (6.6,2.4) -- (8.6,2.4)
+        to[C, l_=$C$] (8.6,0) -- (6.6,0);
+  \node[font=\footnotesize] at (6.6,-0.95) {$i_p=pA\,\dfrac{\dd T}{\dd t}$};
+  \draw (8.6,2.4) -- (10.0,2.4) to[R, l=$R$] (10.0,0) -- (8.6,0);
+  \draw (10.0,2.4) to[short,-o] (10.8,2.4) node[right] {$V(t)$};
+  \node[ground] at (8.6,0) {};
+  \draw[dashed,cgray] (-0.9,-0.6) rectangle (4.5,3.2);
+  \draw[dashed,cgray] (5.5,-1.5) rectangle (11.6,3.2);
+  \node[cgray,font=\footnotesize] at (1.8,3.5) {(1) chuyển đổi nhiệt};
+  \node[cgray,font=\footnotesize] at (8.5,3.5) {(2) nhiệt -- điện \quad (3) dòng -- áp};
+  \draw[-{Stealth},thick,c2] (4.5,0.5) -- node[below,font=\footnotesize]{$T(t)$} (6.0,0.5);
+\end{circuitikz}
+\caption{Mạch tương đương nhiệt -- điện của đầu thu nhiệt điện}
+\label{fig:tuongduong}
+\end{figure}
+
+\subsection{Chuyển đổi nhiệt}
+
+Phần tử hấp thụ một phần $\eta$ công suất bức xạ tới $\Phi(t)$. Một phần nhiệt làm tăng nhiệt độ phần tử (nhiệt dung $H$), phần còn lại truyền ra vỏ và không khí (độ dẫn nhiệt $G$). Phương trình cân bằng nhiệt:
+\begin{equation}
+  H\,\frac{\dd T}{\dd t} + G\,T = \eta\,\Phi(t),
+  \label{eq:nhiet}
+\end{equation}
+với $T$ là độ tăng nhiệt độ so với môi trường. Biến đổi Laplace, ta được hàm truyền:
+\begin{equation}
+  G_T(s) = \frac{T(s)}{\Phi(s)} = \frac{\eta}{G}\cdot\frac{1}{1+s\tau_T},\qquad \tau_T = \frac{H}{G},\qquad H = c'\,A\,d .
+  \label{eq:GT}
+\end{equation}
+$\tau_T$ là \emph{hằng số thời gian nhiệt}: phần tử càng dày thì $H$ càng lớn và phần tử càng chậm nóng lên. Phương trình~\eqref{eq:nhiet} có dạng giống hệt mạch $RC$ song song được nạp bởi nguồn dòng. Đây là phép tương tự nhiệt -- điện dùng trong mô hình ở hình~\ref{fig:tuongduong} (bảng~\ref{tab:tuongtu}).
+
+\begin{table}[!htb]
+\centering
+\caption{Phép tương tự nhiệt -- điện dùng trong mô hình}
+\label{tab:tuongtu}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Đại lượng nhiệt} & \textbf{Đại lượng điện tương ứng} & \textbf{Quy ước trong LTspice} \\ \midrule
+Độ tăng nhiệt độ $T$ [K] & Điện áp nút & 1~V = 1~K \\
+Dòng nhiệt $\eta\Phi$ [W] & Nguồn dòng & 1~A = 1~W \\
+Nhiệt dung $H$ [J/K] & Tụ điện & 1~F = 1~J/K \\
+Nhiệt trở $1/G$ [K/W] & Điện trở & 1~$\Omega$ = 1~K/W \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Chuyển đổi nhiệt -- điện và dòng -- áp}
+
+Theo \eqref{eq:ip}, trong miền Laplace:
+\begin{equation}
+  I_p(s) = p\,A\,s\,T(s).
+  \label{eq:GTI}
+\end{equation}
+Dòng $i_p$ chạy vào điện dung tương đương $C$ (điện dung phần tử cộng điện dung vào của mạch đệm) mắc song song với điện trở tương đương $R$ (điện trở rò của phần tử song song với điện trở vào của mạch đệm):
+\begin{equation}
+  C\,\frac{\dd V}{\dd t} + \frac{V}{R} = i_p(t)
+  \quad\Rightarrow\quad
+  \frac{V(s)}{I_p(s)} = \frac{R}{1+s\tau_E},\qquad \tau_E = RC .
+  \label{eq:GIV}
+\end{equation}
+$\tau_E$ là \emph{hằng số thời gian điện}.
+
+\subsection{Hàm truyền và độ nhạy của đầu thu}
+
+Ghép nối tiếp ba khâu \eqref{eq:GT}, \eqref{eq:GTI}, \eqref{eq:GIV}, ta có hàm truyền từ công suất bức xạ sang điện áp:
+\begin{equation}
+  \boxed{\,G(s) = \frac{V(s)}{\Phi(s)} = \frac{\eta\,p\,A\,R}{G}\cdot\frac{s}{(1+s\tau_T)(1+s\tau_E)}\,}
+  \label{eq:Gs}
+\end{equation}
+Độ nhạy điện áp (responsivity) là mô-đun của hàm truyền khi bức xạ biến thiên hình sin với tần số góc $\omega$:
+\begin{equation}
+  R_V(\omega) = \frac{\eta\,p\,A\,R}{G}\cdot\frac{\omega}{\sqrt{1+\omega^2\tau_T^2}\,\sqrt{1+\omega^2\tau_E^2}}\qquad[\text{V/W}].
+  \label{eq:RV}
+\end{equation}
+
+Từ \eqref{eq:RV} rút ra các tính chất quan trọng:
+\begin{itemize}
+  \item Tại $\omega = 0$, $R_V = 0$: \textbf{cảm biến không đáp ứng với bức xạ không đổi}. Đây là một bộ lọc thông dải tự nhiên.
+  \item Ở tần số thấp ($\omega \ll 1/\tau_T, 1/\tau_E$): $R_V \approx \eta pAR\omega/G$, tăng 20~dB/decade.
+  \item Ở tần số cao ($\omega \gg 1/\tau_T, 1/\tau_E$): $R_V \approx \dfrac{\eta\,p}{c'\,d\,C\,\omega}$, giảm 20~dB/decade và không còn phụ thuộc $R$.
+  \item Độ nhạy cực đại tại $\omega_p = 1/\sqrt{\tau_T\tau_E}$, với giá trị $R_{V,\max} = \dfrac{\eta pAR}{G(\tau_T+\tau_E)}$.
+\end{itemize}
+
+\subsection{Đáp ứng với bức xạ dạng bậc thang}
+\label{sec:dapungbac}
+
+Giả sử một vật nóng xuất hiện rồi \emph{đứng yên}: công suất tới tăng đột ngột một lượng $\Delta\Phi$ rồi giữ nguyên. Lấy Laplace ngược của $G(s)\,\Delta\Phi/s$, ta được:
+\begin{equation}
+  V(t) = \frac{\eta\,p\,A\,R\,\Delta\Phi}{G\,(\tau_E-\tau_T)}\left(e^{-t/\tau_E}-e^{-t/\tau_T}\right).
+  \label{eq:step}
+\end{equation}
+Điện áp tăng lên, đạt cực đại tại $t^* = \dfrac{\tau_T\tau_E}{\tau_E-\tau_T}\ln\dfrac{\tau_E}{\tau_T}$, rồi \emph{giảm dần về 0}, dù vật nóng vẫn còn đó. Đây là lý do cảm biến PIR không phát hiện được người đứng yên. Hiện tượng này được kiểm chứng bằng mô phỏng ở mục~\ref{sec:kq-sk45}.
+
+% ---------------------------------------------------------------------
+\section{Cấu tạo cảm biến \LHI{}}
+\label{sec:cautao}
+% ---------------------------------------------------------------------
+
+\subsection{Cấu tạo cơ khí và sơ đồ chân}
+
+\LHI{} được đóng trong vỏ kim loại TO-5 (đường kính 9,2~mm, cao 4,2~mm) \cite{lhi778-ds,pyd1378}. Phía trên có cửa sổ lọc hồng ngoại tiêu chuẩn, cắt các bước sóng ngắn hơn 5,5~µm (ánh sáng nhìn thấy, bức xạ của đèn) và cho qua trung bình trên 77\% trong dải 7,5 -- 13,5~µm. Bên dưới cửa sổ là hai phần tử gốm, mỗi phần tử $2\times1$~mm$^2$, đặt song song và cách nhau 1~mm (hình~\ref{fig:cokhi}). Vỏ kim loại được nối với chân G (GND) để chống nhiễu điện từ.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}[font=\small,scale=0.62]
+  % --- top view
+  \begin{scope}
+    \draw[thick] (0,0) circle (4.6);
+    \draw[thick] (0,0) circle (4.1);
+    \draw[thick,fill=c1!8] (-2,-1.5) rectangle (2,1.5);
+    \fill[c2!70] (-1.5,-1.0) rectangle (-0.5,1.0);
+    \fill[c2!70] (0.5,-1.0) rectangle (1.5,1.0);
+    \node[font=\scriptsize] at (-1.0,-1.4) {A};
+    \node[font=\scriptsize] at (1.0,-1.4) {B};
+    \draw[<->] (-1.5,1.3) -- node[above,font=\scriptsize]{1} (-0.5,1.3);
+    \draw[<->] (-0.5,1.3) -- node[above,font=\scriptsize]{1} (0.5,1.3);
+    \draw[<->] (1.8,-1.0) -- node[right,font=\scriptsize]{2} (1.8,1.0);
+    \draw[thick] (-0.5,-4.6) -- (0,-5.3) -- (0.5,-4.6);
+    \node[below,align=center] at (0,-5.6) {Nhìn từ trên (kích thước mm)\\cửa sổ lọc và 2 phần tử};
+  \end{scope}
+  % --- bottom view
+  \begin{scope}[xshift=12cm]
+    \draw[thick] (0,0) circle (4.6);
+    \draw[thick] (-0.5,-4.6) -- (0,-5.3) -- (0.5,-4.6);
+    \foreach \a/\n in {135/S,45/G,225/D} {
+      \fill (\a:2.54) circle (0.35);
+      \node at (\a:3.45) {\textbf{\n}};}
+    \draw[dashed,cgray] (0,0) circle (2.54);
+    \node[below,align=center] at (0,-5.6) {Nhìn từ dưới\\D: drain, S: source, G: GND/vỏ};
+  \end{scope}
+\end{tikzpicture}
+\caption{Cấu tạo cơ khí và sơ đồ chân của \LHI{} (vẽ lại theo \cite{lhi778-ds,pyd1378})}
+\label{fig:cokhi}
+\end{figure}
+
+\subsection{Mạch điện bên trong}
+
+Sơ đồ điện bên trong \LHI{} (hình~\ref{fig:mangtrong}) gồm:
+\begin{itemize}
+  \item \textbf{Hai phần tử nhiệt điện A và B} mắc nối tiếp ngược cực (series opposed) giữa cực cổng G của FET và đất.
+  \item \textbf{Điện trở cổng $R_G$} rất lớn (hàng chục GΩ): tạo đường một chiều cho cực cổng và xác định hằng số thời gian điện $\tau_E$.
+  \item \textbf{FET} mắc kiểu lặp nguồn (source follower): biến điện áp trên phần tử (trở kháng hàng chục GΩ) thành điện áp ra ở chân S có trở kháng khoảng 5~kΩ.
+  \item \textbf{Tụ chống nhiễu (EMI capacity)} từ chân S xuống đất.
+  \item Mạch ngoài: chân D nối nguồn $V_{DD}$, chân S nối điện trở tải $R_S = 47$~kΩ xuống đất, theo khuyến nghị của nhà sản xuất.
+\end{itemize}
+
+\begin{figure}[!htb]
+\centering
+\begin{circuitikz}[font=\small]
+  \draw (0,4) to[I, l_=$i_A$, invert] (0,2) to[I, l_=$i_B$] (0,0);
+  \draw (0,4) -- (1.6,4) to[C, l=$C_E$] (1.6,2) to[C, l=$C_E$] (1.6,0);
+  \draw (0,2) -- (1.6,2);
+  \node[font=\scriptsize,c2] at (-1.3,3.2) {phần tử A};
+  \node[font=\scriptsize,c2] at (-1.3,0.8) {phần tử B};
+  \draw (1.6,4) -- (3.6,4) to[R, l=$R_G$] (3.6,0);
+  \draw (3.6,4) -- (4.8,4);
+  \draw (5.5,4) node[njfet,anchor=G] (J) {};
+  \draw (J.G) -- (4.8,4);
+  \draw (J.D) |- (8.6,5.3) node[ocirc]{} node[right]{D};
+  \draw (J.S) |- (7.2,2.6) coordinate (sn);
+  \draw (sn) -- (8.6,2.6) node[ocirc]{} node[right]{S};
+  \draw (sn) to[C, l=$C_\mathrm{EMI}$, *-] (7.2,0);
+  \draw (0,0) -- (8.6,0) node[ocirc]{} node[right]{G};
+  \node[font=\scriptsize] at (2.5,4.35) {G (cổng)};
+  \node[font=\scriptsize] at (2.3,2.3) {M};
+  \draw[dashed,cgray,rounded corners] (-2.3,-0.6) rectangle (8.2,5.9);
+  \node[cgray,anchor=north west,font=\footnotesize] at (-2.2,5.85) {\LHI{}};
+  % external
+  \draw (9.6,5.3) node[ocirc]{} -- (10.8,5.3) node[right]{$V_{DD}=3{,}3$ V};
+  \draw (9.6,2.6) node[ocirc]{} -- (10.8,2.6) to[R, l=$R_S$, a=\SI{47}{\kilo\ohm}] (10.8,0) node[ground]{};
+  \draw (10.8,2.6) to[short,*-o] (12.2,2.6) node[right]{$V_S$};
+  \draw (9.6,0) node[ocirc]{} -- (10.8,0);
+  \draw[dotted] (8.6,5.3) -- (9.6,5.3) (8.6,2.6) -- (9.6,2.6) (8.6,0) -- (9.6,0);
+\end{circuitikz}
+\caption{Mạch điện bên trong \LHI{} và mạch ngoài}
+\label{fig:mangtrong}
+\end{figure}
+
+\subsection{Nguyên lý phần tử kép (dual element)}
+\label{sec:dual}
+
+Mỗi phần tử có thể coi là một nguồn dòng $i_k$ mắc song song với tụ $C_E$ (hình~\ref{fig:mangtrong}). Hai phần tử nối tiếp ngược cực, nên theo định lý Thévenin -- Norton, cực cổng nhìn thấy một nguồn dòng tương đương bằng \emph{nửa hiệu} hai dòng, song song với điện dung $C_E/2$:
+\begin{equation}
+  V_G(s) = \frac{i_A(s) - i_B(s)}{2}\cdot\frac{R_G}{1+s\,R_G\,(C_E/2 + C_\text{in})},
+  \label{eq:dual}
+\end{equation}
+trong đó $C_\text{in}$ là điện dung vào của FET. Công thức~\eqref{eq:dual} cho thấy:
+\begin{itemize}
+  \item Nếu \textbf{cả hai phần tử} nhận cùng một thay đổi bức xạ (ánh nắng, luồng khí nóng, nhiệt độ phòng thay đổi), thì $i_A = i_B$ và $V_G = 0$. Cảm biến \emph{tự triệt tiêu} nhiễu chung (common-mode).
+  \item Chỉ khi \textbf{bức xạ trên hai phần tử khác nhau} thì mới có tín hiệu. Đó chính là trường hợp ảnh của một vật di chuyển lướt qua lần lượt từng phần tử.
+  \item Nếu độ nhạy hai phần tử lệch nhau một tỉ lệ $m$ (thông số \emph{match}, điển hình 1\%, tối đa 10\%), thì nhiễu chung chỉ bị giảm $1/m$ lần (40~dB với $m = 1\%$).
+  \item Hằng số thời gian điện là $\tau_E = R_G\,(C_E/2 + C_\text{in})$.
+\end{itemize}
+
+Hình~\ref{fig:fresnel} minh họa quá trình tạo tín hiệu khi người đi ngang qua. Thấu kính Fresnel nhiều vùng chiếu ảnh của người lần lượt lên phần tử A rồi B (mỗi vùng), nên công suất tới $P_A(t)$ và $P_B(t)$ là các chuỗi xung lệch nhau nửa chu kỳ. Cảm biến chỉ thấy hiệu $P_A - P_B$, nên điện áp ra là một chuỗi dao động dương -- âm xen kẽ. Thứ tự dương/âm phụ thuộc vào hướng đi (mục~\ref{sec:kq-huong}).
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}[font=\small,>=Stealth]
+  % lens and sensor
+  \draw[thick,c1] (0,-1.6) -- (0,1.6);
+  \foreach \y in {-1.4,-1.0,...,1.4} \draw[c1] (0,\y) -- (0.12,\y+0.2);
+  \node[c1,below] at (0,-1.65) {thấu kính Fresnel};
+  \fill[c2!70] (-0.75,0.05) rectangle (-0.6,0.3);
+  \fill[c3!70] (-0.75,-0.3) rectangle (-0.6,-0.05);
+  \node[left,font=\scriptsize] at (-0.8,0.2) {A};
+  \node[left,font=\scriptsize] at (-0.8,-0.2) {B};
+  % zones fanning out
+  \foreach \k/\c in {-3/c2,-2/c3,-1/c2,0/c3,1/c2,2/c3} {
+    \pgfmathsetmacro{\ya}{\k*1.1}
+    \pgfmathsetmacro{\yb}{\k*1.1+1.1}
+    \fill[\c!15] (0.1,\ya*0.12) -- (8,\ya) -- (8,\yb) -- (0.1,\yb*0.12) -- cycle;}
+  \foreach \k in {-3,...,3} \draw[cgray!60] (0.1,\k*0.132) -- (8,\k*1.1);
+  % person path
+  \draw[->,very thick] (7.2,-3.5) -- (7.2,3.5) node[above]{người đi, vận tốc $v$};
+  \node[c2!70!black,font=\scriptsize] at (9.1,2.75) {vùng A};
+  \node[c3!70!black,font=\scriptsize] at (9.1,1.65) {vùng B};
+  \draw[<->] (0.4,-3.9) -- node[below]{khoảng cách $D$} (7.2,-3.9);
+\end{tikzpicture}
+\caption{Thấu kính Fresnel chia vùng nhìn thành các dải A, B xen kẽ; người đi ngang lần lượt cắt qua các dải}
+\label{fig:fresnel}
+\end{figure}
+
+\subsection{Mạch lặp nguồn dùng JFET}
+\label{sec:jfet}
+
+Điện áp trên phần tử có trở kháng rất lớn (hàng chục GΩ), không thể nối trực tiếp vào mạch ngoài. FET bên trong làm nhiệm vụ biến đổi trở kháng. Cực cổng nối xuống đất qua $R_G$, nên $V_G \approx 0$. Dòng máng của JFET trong vùng bão hòa:
+\begin{equation}
+  I_D = \beta\,(V_{GS} - V_{TO})^2 ,\qquad V_{GS} = V_G - V_S \approx -V_S ,
+  \label{eq:jfetid}
+\end{equation}
+với $V_{TO} < 0$ là điện áp thắt kênh và $\beta$ là hệ số hỗ dẫn. Dòng này chạy qua $R_S$, nên $V_S = I_D R_S$. Kết hợp lại được phương trình bậc hai theo $V_S$:
+\begin{equation}
+  \beta R_S\,(V_S + V_{TO})^2 = V_S .
+  \label{eq:jfetvs}
+\end{equation}
+Các thông số tín hiệu nhỏ của mạch lặp nguồn:
+\begin{align}
+  g_m &= 2\beta\,(V_{GS} - V_{TO}) = 2\sqrt{\beta\,I_D}, \label{eq:gm}\\
+  A_{sf} &= \frac{V_s}{V_g} = \frac{g_m R_S}{1+g_m R_S}, \label{eq:Asf}\\
+  r_\text{out} &= \frac{1}{g_m}\,\Big\|\,R_S . \label{eq:rout}
+\end{align}
+
+Datasheet không cho thông số của FET bên trong, nhưng cho hai số đo liên quan: điện áp offset $V_S = 0{,}2 \text{ -- } 1{,}55$~V và trở kháng ra điển hình 5~kΩ với $R_S = 47$~kΩ. Chọn $V_{TO} = -1{,}0$~V và $\beta = \num{4.5e-4}$~A/V$^2$, giải \eqref{eq:jfetvs} với $R_S = 47$~kΩ:
+\begin{align*}
+  21{,}15\,(1 - V_S)^2 = V_S \;&\Rightarrow\; V_S \approx 0{,}805~\text{V},\quad I_D = V_S/R_S \approx 17{,}1~\text{µA},\\
+  g_m = 2\beta(1-V_S) \approx 0{,}176~\text{mS} \;&\Rightarrow\; r_\text{out} = 5{,}70~\text{kΩ}\,\|\,47~\text{kΩ} \approx 5{,}1~\text{kΩ},\quad A_{sf} \approx 0{,}89 .
+\end{align*}
+Cả $V_S$ lẫn $r_\text{out}$ đều khớp với datasheet (offset nằm trong 0,2 -- 1,55~V, trở kháng ra điển hình 5~kΩ).
+
+Với nguồn 3,3~V, điện áp máng -- nguồn là $V_{DS} = 3{,}3 - 0{,}81 \approx 2{,}5$~V. Giá trị này lớn hơn mức tối thiểu 0,5~V mà datasheet PYD 1378 yêu cầu \cite{pyd1378}, nên FET làm việc đúng trong vùng bão hòa. Cảm biến chỉ tiêu thụ $I_D \cdot V_{DD} \approx 17~\text{µA}\times 3{,}3~\text{V} \approx 57$~µW.
+
+Điểm quan trọng cho thiết kế mạch phía sau: tín hiệu hữu ích (vài mV) nằm chồng lên một điện áp một chiều $V_S$ khá lớn (0,2 -- 1,55~V) và \emph{khác nhau giữa các cảm biến}. Mạch chuẩn hóa vì thế không được khuếch đại thành phần một chiều này.

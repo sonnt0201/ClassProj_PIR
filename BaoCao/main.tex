@@ -1,0 +1,135 @@
+% =====================================================================
+%  BÁO CÁO BÀI TẬP LỚN – CẢM BIẾN VÀ XỬ LÝ TÍN HIỆU ĐO
+%  Đề tài: Thiết kế mạch cảm biến phát hiện chuyển động PIR sử dụng LHI778
+%  Biên dịch:  latexmk -xelatex main.tex   (hoặc xelatex main.tex hai lần)
+% =====================================================================
+\documentclass[a4paper,fontsize=13pt,oneside,numbers=noendperiod,
+  chapterprefix=false,headings=normal,listof=totoc,bibliography=totoc]{scrreprt}
+
+% ------------------------------------------------------------ ngôn ngữ, font
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{vietnamese}
+\setmainfont{Times New Roman}
+\setsansfont{Arial}
+\setmonofont{Consolas}[Scale=0.9]
+\usepackage{amsmath}
+\usepackage{unicode-math}
+\setmathfont{TeX Gyre Termes Math}
+\usepackage{icomma}                    % dấu phẩy thập phân trong công thức
+
+% ------------------------------------------------------------ trang in
+\usepackage[a4paper,left=3cm,right=2cm,top=2.5cm,bottom=2.5cm,
+  headheight=16pt,footskip=1.2cm]{geometry}
+\usepackage{setspace}
+\setstretch{1.2}
+\setlength{\parindent}{1cm}
+\setlength{\parskip}{0pt plus 1pt}
+\usepackage{indentfirst}
+\setlength{\emergencystretch}{2.5em}
+
+% ------------------------------------------------------------ tiêu đề chương
+\renewcommand*{\raggedchapter}{\centering}
+\setkomafont{disposition}{\rmfamily\bfseries}
+\setkomafont{chapter}{\fontsize{16}{20}\selectfont}
+\setkomafont{section}{\fontsize{14}{17}\selectfont}
+\setkomafont{subsection}{\fontsize{13}{16}\selectfont}
+\renewcommand*{\chapterformat}{\MakeUppercase{\chapapp}~\thechapter.\enskip}
+\RedeclareSectionCommand[beforeskip=0pt,afterskip=18pt]{chapter}
+\RedeclareSectionCommand[beforeskip=12pt,afterskip=6pt]{section}
+\RedeclareSectionCommand[beforeskip=8pt,afterskip=4pt]{subsection}
+\newcommand*{\chapterentrynumberformat}[1]{\MakeUppercase{\chapapp}~#1\unskip.\enskip}
+\DeclareTOCStyleEntry[entrynumberformat=\chapterentrynumberformat,
+  dynnumwidth,beforeskip=6pt]{chapter}{chapter}
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{3}
+
+% ------------------------------------------------------------ đầu/chân trang
+\usepackage[headsepline]{scrlayer-scrpage}
+\clearpairofpagestyles
+\ihead{\small\itshape Báo cáo bài tập lớn: Cảm biến và xử lý tín hiệu đo}
+\ohead{\small\itshape Nguyễn Thái Sơn – 20252373M}
+\cfoot*{\pagemark}
+\setkomafont{pageheadfoot}{\normalfont}
+
+% ------------------------------------------------------------ hình, bảng
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[labelsep=period,font=small,labelfont=bf,justification=centering]{caption}
+\captionsetup[table]{position=top,skip=4pt}
+\captionsetup[figure]{skip=6pt}
+\usepackage{subcaption}
+\usepackage{booktabs,tabularx,multirow,array,longtable}
+\renewcommand{\arraystretch}{1.25}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.2cm}
+\setlist[itemize]{label=–}
+\usepackage{xcolor}
+\definecolor{bkred}{RGB}{190,30,45}
+\definecolor{c1}{RGB}{11,98,196}
+\definecolor{c2}{RGB}{209,72,15}
+\definecolor{c3}{RGB}{26,127,55}
+\definecolor{c4}{RGB}{130,80,223}
+\definecolor{cgray}{RGB}{110,118,129}
+
+% ------------------------------------------------------------ đơn vị, số
+\usepackage{siunitx}
+\sisetup{output-decimal-marker={,},group-separator={.},group-minimum-digits=5,
+  exponent-product=\cdot,per-mode=symbol,range-phrase={ -- },list-final-separator={ và }}
+
+% ------------------------------------------------------------ vẽ mạch, đồ thị
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,shapes.geometric,decorations.pathreplacing,
+  fit,backgrounds,patterns}
+\usepackage[siunitx,european resistors,american inductors]{circuitikz}
+\ctikzset{bipoles/length=0.9cm, amplifiers/scale=0.95, monopoles/ground/width=0.5,
+  logic ports=ieee}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18,
+  every axis/.append style={font=\small, grid=major, grid style={gray!25}, scaled ticks=false,
+    yticklabel style={/pgf/number format/fixed,/pgf/number format/precision=3},
+    every axis y label/.append style={font=\footnotesize},
+    /pgf/number format/use comma, /pgf/number format/1000 sep={}},
+  every axis legend/.append style={font=\footnotesize, draw=gray!50, fill=white, fill opacity=0.9,
+    text opacity=1}}
+\usepgfplotslibrary{groupplots,fillbetween}
+
+% ------------------------------------------------------------ khác
+\usepackage{pdflscape}
+\usepackage{xurl}
+\usepackage[hidelinks,unicode]{hyperref}
+\hypersetup{pdftitle={Thiết kế mạch cảm biến phát hiện chuyển động PIR sử dụng LHI778},
+  pdfauthor={Nguyễn Thái Sơn}}
+
+% lệnh tiện ích
+\newcommand{\VREF}{V_\mathrm{REF}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\LHI}{LHi~778}
+
+\begin{document}
+\renewcommand{\contentsname}{MỤC LỤC}
+\renewcommand{\listfigurename}{DANH MỤC HÌNH VẼ}
+\renewcommand{\listtablename}{DANH MỤC BẢNG BIỂU}
+\renewcommand{\bibname}{TÀI LIỆU THAM KHẢO}
+\renewcommand{\appendixname}{Phụ lục}
+\input{bia.tex}
+
+\pagenumbering{roman}
+\setcounter{page}{2}
+\input{loinoidau.tex}
+\tableofcontents
+\listoffigures
+\listoftables
+\input{kyhieu.tex}
+
+\cleardoublepage
+\pagenumbering{arabic}
+\input{chuong1.tex}
+\input{chuong2.tex}
+\input{chuong3.tex}
+\input{tailieu.tex}
+\appendix
+\input{phuluc.tex}
+\end{document}

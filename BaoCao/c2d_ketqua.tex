@@ -1,0 +1,370 @@
+% ---------------------------------------------------------------------
+\section{Kết quả mô phỏng}
+\label{sec:ketqua}
+% ---------------------------------------------------------------------
+
+\subsection{Thiết lập mô phỏng}
+
+Toàn bộ hệ thống nằm trong một file LTspice duy nhất \texttt{PIR\_LHI778.asc}: tín hiệu vào, mô hình \LHI{}, nguồn nhiễu, mạch khuếch đại -- lọc và nguồn tham chiếu (hình~\ref{fig:ltspice}). Mô phỏng dùng LTspice 26.1.1 với:
+\begin{itemize}
+  \item phân tích quá độ \texttt{.tran 0 40 0 0.1m} (40~s, bước tối đa 0,1~ms, đủ để biểu diễn nhiễu 1~kHz; chạy khoảng 15 -- 30~s);
+  \item phân tích tần số \texttt{.ac dec 100 0.01 1k} với nguồn thử 1~µW trên phần tử A;
+  \item \texttt{.options gmin=1e-15}, \texttt{.save} các nút chính, và các lệnh \texttt{.meas} tự động đo mức nghỉ, biên độ từng kịch bản, nhiễu trước/sau lọc.
+\end{itemize}
+
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\begin{subfigure}{\linewidth}\centering
+\input{hinh/ltspice_cb.tex}
+\caption{Tín hiệu vào, mô hình nhiệt, mô hình \LHI{} (khung nét đứt), $R_S$ và nguồn nhiễu BN}
+\end{subfigure}
+
+\vspace{0.3cm}
+\begin{subfigure}{\linewidth}\centering
+\input{hinh/ltspice_mach.tex}
+\caption{Mạch khuếch đại (U1A, U1B), lọc Sallen-Key (U1C) và chia áp đầu ra $R_8$ -- $R_9$}
+\end{subfigure}
+
+\vspace{0.3cm}
+\begin{subfigure}{\linewidth}\centering
+\input{hinh/ltspice_vref.tex}
+\caption{Nguồn 3,3~V và mạch tạo $\VREF$ (U1D)}
+\end{subfigure}
+\caption{Sơ đồ nguyên lý toàn hệ thống trong file LTspice \texttt{PIR\_LHI778.asc} (vẽ lại từ file mô phỏng)}
+\label{fig:ltspice}
+\end{figure}
+\end{landscape}
+
+\subsection{Điểm làm việc tĩnh}
+
+Khi không có chuyển động (0,5 -- 2,5~s), các nút có điện áp như trong bảng~\ref{tab:dc}.
+
+\begin{table}[!htb]
+\centering
+\caption{Điểm làm việc tĩnh (không có chuyển động)}
+\label{tab:dc}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.3cm}p{2.6cm}p{2.8cm}L@{}}
+\toprule
+\textbf{Nút} & \textbf{Mô phỏng} & \textbf{Tính toán} & \textbf{Nhận xét} \\ \midrule
+Cổng FET $V_G$ & 0,4~mV & $\approx 0$ & Cổng nối đất qua $R_G$ \\
+Chân S, $V_S$ & 0,8095~V & 0,805~V & Trong dải datasheet 0,2 -- 1,55~V \\
+Tầng 1, $V_{A1}$ & 0,8094~V & $= V_S$ & $C_1$ chặn DC, hệ số DC bằng 1 \\
+$\VREF$ & 1,6500~V & 1,65~V & $V_{DD}/2$ \\
+Tầng 2, $V_{A2}$ & 1,6492~V & $\VREF \pm 1{,}2$~mV & Lệch $-0{,}8$~mV do $16\,V_{OS}$ \\
+Bộ lọc, $V_{A3}$ & 1,6491~V & $= V_{A2}$ & Hệ số 1 \\
+\textbf{Đầu ra OUT} & \textbf{1,4992~V} & \textbf{1,50~V} & \textbf{Đạt yêu cầu 1,5~V (sai số 0,05\%)} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Mức nghỉ của đầu ra là 1,4992~V, chỉ lệch 0,8~mV so với 1,5~V yêu cầu. Nhờ tụ $C_1$ và $C_3$, điện áp offset 0,81~V của cảm biến \emph{không} ảnh hưởng tới mức nghỉ. Nếu thay bằng một cảm biến khác có $V_S = 0{,}2$~V hay 1,55~V, đầu ra vẫn ở 1,5~V.
+
+\subsection{Đáp ứng tần số của mạch chuẩn hóa}
+
+Hình~\ref{fig:bode} trình bày hệ số khuếch đại của từng khối và của toàn mạch (từ chân S tới OUT), lấy từ phân tích AC. Các số liệu chính tổng hợp trong bảng~\ref{tab:bode}.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{semilogxaxis}[width=0.93\textwidth,height=8.2cm,xmin=0.01,xmax=1000,ymin=-90,ymax=70,
+  xlabel={Tần số [Hz]},ylabel={Hệ số khuếch đại [dB]},ytick distance=20,
+  legend pos=south west,log ticks with fixed point]
+  \fill[c3!10] (axis cs:0.5,-90) rectangle (axis cs:8.5,70);
+  \addplot[c2,thick] table[x=f,y=G1] {data/ac.dat}; \addlegendentry{Tầng 1: $V_{A1}/V_S$}
+  \addplot[c4,thick] table[x=f,y=G2] {data/ac.dat}; \addlegendentry{Ghép AC + tầng 2: $V_{A2}/V_{A1}$}
+  \addplot[c3,thick,dashed] table[x=f,y=G3] {data/ac.dat}; \addlegendentry{Sallen-Key: $V_{A3}/V_{A2}$}
+  \addplot[c1,very thick] table[x=f,y=G] {data/ac.dat}; \addlegendentry{Toàn mạch: $V_\text{OUT}/V_S$}
+  \draw[densely dashed,cgray] (axis cs:0.01,60) -- (axis cs:1000,60) node[pos=0.97,above,font=\scriptsize]{$63-3=60$ dB};
+  \draw[densely dotted] (axis cs:50,-90) -- (axis cs:50,70) node[pos=0.95,left,font=\scriptsize]{50 Hz};
+  \node[font=\scriptsize,c3!60!black] at (axis cs:2.1,-20) {dải thông 0,5 -- 8,5 Hz};
+\end{semilogxaxis}
+\end{tikzpicture}
+\caption{Đáp ứng tần số của các tầng và của toàn mạch chuẩn hóa (mô phỏng AC)}
+\label{fig:bode}
+\end{figure}
+
+\begin{table}[!htb]
+\centering
+\caption{Hệ số khuếch đại của từng khối theo tần số (mô phỏng AC)}
+\label{tab:bode}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.2cm}YYYYY>{\centering\arraybackslash}p{3.0cm}@{}}
+\toprule
+\textbf{Khối} & \textbf{1 Hz} & \textbf{10 Hz} & \textbf{50 Hz} & \textbf{100 Hz} & \textbf{1 kHz} & \textbf{Dải $-3$ dB} \\ \midrule
+Tầng 1 & 39,6 & 38,6 & 29,7 & 24,0 & 5,5 & 0,33 -- 16,2 Hz \\
+Ghép AC + tầng 2 & 23,6 & 22,6 & 13,7 & 8,5 & 0,3 & 0,33 -- 16,2 Hz \\
+Sallen-Key & 0,0 & $-2{,}0$ & $-26{,}8$ & $-38{,}8$ & $-78{,}7$ & $<11$ Hz \\
+\textbf{Toàn mạch} [dB] & \textbf{62,4} & \textbf{58,4} & \textbf{15,9} & $\mathbf{-7{,}1}$ & $\mathbf{-73{,}8}$ & \textbf{0,50 -- 8,5 Hz} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Các kết quả mô phỏng khớp với tính toán ở mục~\ref{sec:thietke}:
+\begin{itemize}
+  \item Hệ số khuếch đại cực đại 63,0~dB ($\approx 1413$ lần), sát giá trị thiết kế 63,3~dB. Tại 1~Hz đạt 62,4~dB (1314 lần).
+  \item Tần số cắt dưới 0,50~Hz (tính toán 0,53~Hz) và tần số cắt trên 8,5~Hz, đúng như dải thông mong muốn.
+  \item So với dải thông, nhiễu 50~Hz bị suy giảm $63{,}0 - 15{,}9 = 47$~dB (khoảng 225 lần). Nhiễu 1~kHz bị suy giảm 137~dB.
+\end{itemize}
+
+\subsection{Tín hiệu bên trong cảm biến}
+\label{sec:kq-cambien}
+
+Hình~\ref{fig:sk1chain} theo dõi tín hiệu qua từng bước biến đổi bên trong \LHI{} ở kịch bản SK1 (người đi bình thường). Hình này minh họa trực tiếp nguyên lý đo ở mục~\ref{sec:hieuung} -- \ref{sec:cautao}.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=1 by 4,vertical sep=0.25cm,xticklabels at=edge bottom,xlabels at=edge bottom},
+  width=0.93\textwidth,height=3.3cm,xmin=2.5,xmax=7.5,xlabel={Thời gian [s]},
+  legend style={at={(1.0,1.0)},anchor=north east,legend columns=2}]
+  \nextgroupplot[ylabel={$P$ [µW]},ymin=-0.02,ymax=0.16]
+    \addplot[c1,thick] table[x=t,y=pa] {data/tran_sk1.dat}; \addlegendentry{$P_A$}
+    \addplot[c2,thick] table[x=t,y=pb] {data/tran_sk1.dat}; \addlegendentry{$P_B$}
+  \nextgroupplot[ylabel={$\Delta T$ [mK]},ymin=-0.01,ymax=0.12]
+    \addplot[c1,thick] table[x=t,y=ta] {data/tran_sk1.dat}; \addlegendentry{$T_A$}
+    \addplot[c2,thick] table[x=t,y=tb] {data/tran_sk1.dat}; \addlegendentry{$T_B$}
+  \nextgroupplot[ylabel={$i_p$ [pA]},ymin=-0.3,ymax=0.3]
+    \addplot[c1,thick] table[x=t,y=ia] {data/tran_sk1.dat}; \addlegendentry{$i_A$}
+    \addplot[c2,thick] table[x=t,y=ib] {data/tran_sk1.dat}; \addlegendentry{$i_B$}
+  \nextgroupplot[ylabel={$\Delta V_S$ [mV]},ymin=-0.7,ymax=0.7]
+    \addplot[c3,very thick] table[x=t,y=s] {data/tran_sk1.dat}; \addlegendentry{chân S}
+\end{groupplot}
+\end{tikzpicture}
+\caption{Kịch bản SK1: công suất tới, nhiệt độ phần tử, dòng nhiệt điện và điện áp chân S ($\Delta V_S = V_S - V_{S0}$, $V_{S0} = 0{,}8095$~V)}
+\label{fig:sk1chain}
+\end{figure}
+
+Nhận xét:
+\begin{itemize}
+  \item \textbf{Nhiệt độ}: với công suất 0,13~µW, phần tử chỉ nóng lên tối đa \textbf{0,098~mK}. Đường $T(t)$ trễ và tròn hơn xung công suất do quán tính nhiệt $\tau_T = 0{,}6$~s.
+  \item \textbf{Dòng nhiệt điện}: $i_p$ tỉ lệ với \emph{đạo hàm} nhiệt độ. Nó dương khi phần tử đang nóng lên, âm khi đang nguội đi, và có đỉnh chỉ khoảng \textbf{0,23~pA}. Đây là minh chứng trực tiếp cho công thức \eqref{eq:ip}.
+  \item \textbf{Điện áp chân S}: dòng của hai phần tử đi vào cổng FET với dấu ngược nhau, nên $V_S$ là một dao động dương -- âm xen kẽ với biên độ \textbf{1,03~mV$_\text{pp}$} quanh $V_{S0} = 0{,}8095$~V. Biên độ này phù hợp với mức ``khoảng 1~mV$_\text{pp}$'' của tín hiệu PIR thực tế \cite{st-an4368}.
+\end{itemize}
+
+\subsection{Tín hiệu qua các tầng của mạch chuẩn hóa}
+\label{sec:kq-tang}
+
+Hình~\ref{fig:sk2stages} theo dõi kịch bản SK2 (tín hiệu lớn nhất) qua từng tầng của mạch. Bảng~\ref{tab:bientang} tổng hợp biên độ đỉnh -- đỉnh tại mỗi tầng cho ba kịch bản người đi.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=1 by 4,vertical sep=0.25cm,xticklabels at=edge bottom,xlabels at=edge bottom},
+  width=0.93\textwidth,height=3.3cm,xmin=9.5,xmax=13.5,xlabel={Thời gian [s]},
+  legend style={at={(1.0,1.0)},anchor=north east,legend columns=2}]
+  \nextgroupplot[ylabel={$\Delta V_S$ [mV]},ymin=-1.3,ymax=1.3]
+    \addplot[c3,thick] table[x=t,y=s] {data/tran_sk2.dat}; \addlegendentry{chân S ($\approx$ mV)}
+  \nextgroupplot[ylabel={$V_{A1}$ [V]},ymin=0.68,ymax=0.94]
+    \addplot[c2,thick] table[x=t,y=a1] {data/tran_sk2.dat}; \addlegendentry{ra tầng 1}
+  \nextgroupplot[ylabel={[V]},ymin=0,ymax=3.3]
+    \addplot[c4,thin] table[x=t,y=a2] {data/tran_sk2.dat}; \addlegendentry{$V_{A2}$ (trước lọc)}
+    \addplot[c1,thick] table[x=t,y=a3] {data/tran_sk2.dat}; \addlegendentry{$V_{A3}$ (sau lọc)}
+  \nextgroupplot[ylabel={$V_\text{OUT}$ [V]},ymin=0,ymax=3.3,ytick={0,0.5,...,3}]
+    \addplot[c1,very thick] table[x=t,y=out] {data/tran_sk2.dat}; \addlegendentry{OUT}
+    \draw[bkred,densely dashed] (axis cs:9.5,3) -- (axis cs:13.5,3);
+    \draw[cgray,densely dashed] (axis cs:9.5,1.5) -- (axis cs:13.5,1.5);
+\end{groupplot}
+\end{tikzpicture}
+\caption{Kịch bản SK2: tín hiệu tại chân S và sau từng tầng của mạch}
+\label{fig:sk2stages}
+\end{figure}
+
+\begin{table}[!htb]
+\centering
+\caption{Biên độ đỉnh -- đỉnh tại các tầng (mô phỏng quá độ)}
+\label{tab:bientang}
+\small
+\begin{tabularx}{\textwidth}{@{}p{2.5cm}YYYYY@{}}
+\toprule
+\textbf{Kịch bản} & $V_S$ [mV$_\text{pp}$] & $V_{A1}$ [V$_\text{pp}$] & $V_{A2}$ [V$_\text{pp}$] & $V_\text{OUT}$ [V$_\text{pp}$] & $V_\text{OUT}/V_S$ \\ \midrule
+SK1 (bình thường) & 1,03 & 0,093 & 1,41 & 1,27 & 1236 \\
+SK2 (nhanh, gần) & 1,85 & 0,170 & 2,45 & 2,23 & 1203 \\
+SK3 (chậm, xa) & 0,49 & 0,045 & 0,61 & 0,54 & 1115 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Hệ số khuếch đại hiệu dụng giữa biên độ ra và biên độ vào là 1100 -- 1240 lần. Giá trị này nhỏ hơn một chút so với dải giữa (1413), vì tín hiệu chuyển động không phải hình sin: nó có thành phần tần số thấp gần tần số cắt 0,5~Hz. Kịch bản SK3 chậm nhất nên bị suy giảm nhiều nhất. Đầu ra tầng 1 chỉ dao động quanh 0,81~V trong khoảng 0,73 -- 0,90~V, không bị bão hòa, khẳng định việc chọn $K_1 = 101$.
+
+\subsection{Toàn bộ các kịch bản}
+
+Hình~\ref{fig:toanbo} là kết quả của cả năm kịch bản trong 40~s. Bảng~\ref{tab:kichban-kq} tổng hợp giá trị lớn nhất và nhỏ nhất của đầu ra.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=1 by 3,vertical sep=0.25cm,xticklabels at=edge bottom,xlabels at=edge bottom},
+  width=0.93\textwidth,xmin=0,xmax=40,xtick distance=4,xlabel={Thời gian [s]},
+  legend style={at={(0.0,1.0)},anchor=north west,legend columns=2}]
+  \nextgroupplot[height=3.6cm,ylabel={$P$ [µW]},ymin=-0.1,ymax=2.3]
+    \addplot[c1,thick] table[x=t,y=pa] {data/tran_full.dat}; \addlegendentry{$P_A$}
+    \addplot[c2,thick] table[x=t,y=pb] {data/tran_full.dat}; \addlegendentry{$P_B$}
+  \nextgroupplot[height=3.6cm,ylabel={$\Delta V_S$ [mV]},ymin=-1.2,ymax=1.4]
+    \addplot[c3,thick] table[x=t,y=s] {data/tran_full.dat};
+  \nextgroupplot[height=5.2cm,ylabel={$V_\text{OUT}$ [V]},ymin=-0.1,ymax=3.3,ytick={0,0.5,...,3}]
+    \addplot[c1,thick] table[x=t,y=out] {data/tran_full.dat};
+    \draw[bkred,densely dashed] (axis cs:0,3) -- (axis cs:40,3) node[pos=0.93,below,font=\scriptsize]{3,0 V};
+    \draw[bkred,densely dashed] (axis cs:0,0) -- (axis cs:40,0);
+    \draw[cgray,densely dashed] (axis cs:0,1.5) -- (axis cs:40,1.5);
+    \node[font=\scriptsize] at (axis cs:4.8,2.85) {SK1};
+    \node[font=\scriptsize] at (axis cs:11,2.85) {SK2};
+    \node[font=\scriptsize] at (axis cs:16.8,2.85) {SK3};
+    \node[font=\scriptsize] at (axis cs:24,2.85) {SK4};
+    \node[font=\scriptsize] at (axis cs:35,2.85) {SK5};
+\end{groupplot}
+\end{tikzpicture}
+\caption{Kết quả mô phỏng 40~s: tín hiệu vào, điện áp chân S và điện áp ra}
+\label{fig:toanbo}
+\end{figure}
+
+\begin{table}[!htb]
+\centering
+\caption{Điện áp ra trong từng kịch bản}
+\label{tab:kichban-kq}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.6cm}YYYL@{}}
+\toprule
+\textbf{Kịch bản} & \textbf{$V_\text{OUT,min}$ [V]} & \textbf{$V_\text{OUT,max}$ [V]} & \textbf{Đỉnh -- đỉnh [V]} & \textbf{Nhận xét} \\ \midrule
+Nghỉ (0,5 -- 2,5~s) & \multicolumn{2}{c}{1,4992 (trung bình)} & 0,004 & Ổn định ở 1,5~V \\
+SK1 bình thường & 0,80 & 2,07 & 1,27 & Dao động rõ \\
+SK2 nhanh, gần & 0,32 & 2,55 & 2,23 & Lớn nhất, vẫn trong 0 -- 3~V \\
+SK3 chậm, xa & 1,21 & 1,76 & 0,54 & Nhỏ nhưng vẫn phân biệt được \\
+SK4 nền đổi đều & 1,46 & 1,53 & 0,07 & Gần như không đổi \\
+SK5 vật đứng yên & 1,27 & 1,93 & 0,67 & Một xung rồi trở về 1,5~V \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Trong mọi kịch bản, đầu ra luôn nằm trong khoảng \textbf{0,32 -- 2,55~V}, tức là trong dải 0 -- 3~V yêu cầu, và không bị bão hòa. Biên độ ra thay đổi theo cường độ chuyển động: người càng gần hoặc đi càng nhanh thì dao động càng lớn.
+
+\subsection{Nguyên lý phần tử kép và vật đứng yên}
+\label{sec:kq-sk45}
+
+Hình~\ref{fig:sk45} phóng to hai kịch bản kiểm tra nguyên lý của cảm biến.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=2 by 3,horizontal sep=1.6cm,vertical sep=0.25cm,
+    xticklabels at=edge bottom,xlabels at=edge bottom},
+  width=0.5\textwidth,height=3.8cm,xlabel={Thời gian [s]}]
+  \nextgroupplot[xmin=20.5,xmax=30.5,ylabel={$P$ [µW]},ymin=-0.1,ymax=2.2,title={\small SK4: nền tăng đều 2 µW}]
+    \addplot[c1,thick] table[x=t,y=pa] {data/tran_sk4.dat};
+    \addplot[c2,thick,dashed] table[x=t,y=pb] {data/tran_sk4.dat};
+  \nextgroupplot[xmin=30,xmax=40,ymin=-0.01,ymax=0.14,title={\small SK5: vật nóng đứng yên}]
+    \addplot[c1,thick] table[x=t,y=pa] {data/tran_sk5.dat};
+    \addplot[c2,thick,dashed] table[x=t,y=pb] {data/tran_sk5.dat};
+  \nextgroupplot[xmin=20.5,xmax=30.5,ylabel={$\Delta V_S$ [mV]},ymin=-0.4,ymax=1.3]
+    \addplot[c3,thick] table[x=t,y=s] {data/tran_sk4.dat};
+  \nextgroupplot[xmin=30,xmax=40,ymin=-0.4,ymax=1.3]
+    \addplot[c3,thick] table[x=t,y=s] {data/tran_sk5.dat};
+  \nextgroupplot[xmin=20.5,xmax=30.5,ylabel={$V_\text{OUT}$ [V]},ymin=1.0,ymax=2.0]
+    \addplot[c1,thick] table[x=t,y=out] {data/tran_sk4.dat};
+  \nextgroupplot[xmin=30,xmax=40,ymin=1.0,ymax=2.0]
+    \addplot[c1,thick] table[x=t,y=out] {data/tran_sk5.dat};
+\end{groupplot}
+\end{tikzpicture}
+\caption{Kiểm chứng nguyên lý: triệt tiêu thay đổi bức xạ chung (SK4, trái) và không phát hiện vật đứng yên (SK5, phải)}
+\label{fig:sk45}
+\end{figure}
+
+\paragraph{SK4 -- triệt tiêu nhiễu chung.} Công suất tới tăng 2~µW trên \emph{cả hai} phần tử, lớn gấp 15 lần SK1. Nếu chỉ có một phần tử, theo \eqref{eq:step} điện áp chân S sẽ thay đổi khoảng 20~mV và đầu ra bão hòa hoàn toàn. Nhờ cấu trúc phần tử kép, $V_S$ chỉ thay đổi 0,34~mV$_\text{pp}$ (phần dư này do hai phần tử lệch nhau 1\%). Đầu ra chỉ dao động $\pm 35$~mV quanh 1,5~V. Độ triệt tiêu đạt khoảng 35 -- 40~dB, đúng với thông số match 1\% của datasheet.
+
+\paragraph{SK5 -- vật đứng yên.} Công suất trên phần tử A tăng 0,12~µW rồi giữ nguyên. Theo \eqref{eq:step}, với $K_S = \num{39000}$~V·s/W, $\tau_E = 2{,}5$~s, $\tau_T = 0{,}6$~s:
+\begin{equation*}
+  t^* = \frac{0{,}6\times2{,}5}{2{,}5-0{,}6}\ln\frac{2{,}5}{0{,}6} = 1{,}13~\text{s},\qquad
+  V_{S,\max} = \frac{K_S\,\Delta\Phi}{\tau_E-\tau_T}\left(e^{-t^*/\tau_E}-e^{-t^*/\tau_T}\right) \approx 1{,}19~\text{mV}.
+\end{equation*}
+Mô phỏng cho $V_S$ tăng 1,21~mV, khớp với tính toán, rồi giảm dần về mức ban đầu. Đầu ra có một xung ($+0{,}43$~V rồi $-0{,}23$~V), sau đó trở về $1{,}505$~V, dù vật nóng vẫn còn. Đây chính là nhược điểm ``không phát hiện người đứng yên'' của cảm biến PIR, được giải thích bằng nguyên lý nhiệt điện ở mục~\ref{sec:dapungbac}.
+
+\subsection{Nhận biết hướng chuyển động}
+\label{sec:kq-huong}
+
+Em chạy thêm một kịch bản SK6: người đi \emph{ngược chiều} với SK1, cùng tốc độ và khoảng cách. Khi đó ảnh đi qua phần tử B trước, rồi mới tới A. Hình~\ref{fig:huong} so sánh đầu ra của hai kịch bản, đặt cùng gốc thời gian.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.88\textwidth,height=5.2cm,xmin=-0.5,xmax=4.5,ymin=0.6,ymax=2.75,
+  xlabel={Thời gian kể từ lúc bắt đầu kịch bản [s]},ylabel={$V_\text{OUT}$ [V]},legend pos=north east]
+  \addplot[c1,very thick] table[x=t,y=out] {data/dir_sk1.dat}; \addlegendentry{SK1: đi từ A sang B}
+  \addplot[c2,very thick,dashed] table[x=t,y=out] {data/dir_sk6.dat}; \addlegendentry{SK6: đi từ B sang A}
+  \draw[cgray,densely dashed] (axis cs:-0.5,1.5) -- (axis cs:4.5,1.5);
+\end{axis}
+\end{tikzpicture}
+\caption{Đầu ra khi người đi theo hai hướng ngược nhau}
+\label{fig:huong}
+\end{figure}
+
+Hai tín hiệu có cùng biên độ (1,27 và 1,28~V$_\text{pp}$) nhưng \emph{ngược pha}: SK1 tăng lên trước, SK6 giảm xuống trước. Như vậy, nếu phân tích thêm thứ tự xung dương/âm, hệ thống có thể biết được hướng đi của người.
+
+\subsection{Hiệu quả của bộ lọc nhiễu}
+\label{sec:kq-nhieu}
+
+Hình~\ref{fig:nhieu} phóng to khoảng 0,5 -- 1,0~s, khi không có chuyển động. Ba đồ thị lần lượt là nhiễu đưa vào đường tín hiệu, tín hiệu trước bộ lọc Sallen-Key ($\Delta V_{A2} = V_{A2}-\VREF$) và sau bộ lọc ($\Delta V_{A3} = V_{A3}-\VREF$). Bảng~\ref{tab:nhieu} tổng hợp biên độ nhiễu đỉnh -- đỉnh đo trong 0,5 -- 2,5~s.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=1 by 3,vertical sep=0.25cm,xticklabels at=edge bottom,xlabels at=edge bottom},
+  width=0.93\textwidth,height=3.5cm,xmin=0.5,xmax=1.0,xlabel={Thời gian [s]},
+  legend style={at={(1.0,1.0)},anchor=north east}]
+  \nextgroupplot[ylabel={[µV]},ymin=-130,ymax=130]
+    \addplot[cgray,thin] table[x=t,y=n] {data/noise.dat}; \addlegendentry{$v_n$: nhiễu vào (50 Hz + 1 kHz + trắng)}
+  \nextgroupplot[ylabel={[mV]},ymin=-12,ymax=12]
+    \addplot[c2,thin] table[x=t,y=a2] {data/noise.dat}; \addlegendentry{$\Delta V_{A2}$: trước bộ lọc}
+  \nextgroupplot[ylabel={[mV]},ymin=-12,ymax=12]
+    \addplot[c1,thick] table[x=t,y=a3] {data/noise.dat}; \addlegendentry{$\Delta V_{A3}$: sau bộ lọc}
+\end{groupplot}
+\end{tikzpicture}
+\caption{Nhiễu trước và sau bộ lọc thông thấp Sallen-Key khi không có chuyển động}
+\label{fig:nhieu}
+\end{figure}
+
+\begin{table}[!htb]
+\centering
+\caption{Biên độ nhiễu khi không có chuyển động}
+\label{tab:nhieu}
+\small
+\begin{tabularx}{\textwidth}{@{}p{4.2cm}p{3.0cm}L@{}}
+\toprule
+\textbf{Vị trí} & \textbf{Nhiễu đỉnh -- đỉnh} & \textbf{Thành phần chính} \\ \midrule
+Đưa vào (SN $-$ S) & 0,22~mV & 50~Hz, 1~kHz, nhiễu trắng \\
+Trước bộ lọc ($V_{A2}$) & 19,1~mV & 50~Hz ($\approx 15$~mV$_\text{pp}$) \\
+Sau bộ lọc ($V_{A3}$) & 4,2~mV & Nhiễu trắng trong dải 0,5 -- 10~Hz \\
+Đầu ra OUT & 3,8~mV & Bằng 0,13\% dải 3~V \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Phân tích kết quả:
+\begin{itemize}
+  \item Trước bộ lọc, nhiễu 50~Hz được khuếch đại $10^{(29{,}7+13{,}7)/20} \approx 148$ lần, thành khoảng 15~mV$_\text{pp}$. Nó hiện rõ thành một dao động hình sin trên $V_{A2}$.
+  \item Bộ lọc Sallen-Key làm suy giảm 50~Hz thêm 26,8~dB (khoảng 22 lần), nên dao động 50~Hz gần như biến mất trên $V_{A3}$. Nhiễu 1~kHz không còn nhận ra được.
+  \item Phần nhiễu còn lại (khoảng 4~mV$_\text{pp}$) là \emph{nhiễu trắng nằm trong dải 0,5 -- 10~Hz}. Nó trùng tần số với tín hiệu nên không bộ lọc nào loại được. Mức nhiễu này nhỏ hơn nhiều so với tín hiệu nhỏ nhất (SK3: 0,54~V$_\text{pp}$).
+  \item Cần lưu ý: chính cảm biến cũng có nhiễu riêng khoảng 20~µV$_\text{pp}$ trong dải 0,4 -- 10~Hz (datasheet). Sau khuếch đại, nhiễu này thành khoảng 25~mV$_\text{pp}$ ở đầu ra. Đây là giới hạn cơ bản quyết định ngưỡng phát hiện nhỏ nhất của hệ thống.
+\end{itemize}
+
+\subsection{Đánh giá kết quả so với yêu cầu}
+
+\begin{table}[!htb]
+\centering
+\caption{Đánh giá kết quả mô phỏng so với yêu cầu thiết kế}
+\label{tab:danhgia}
+\small
+\begin{tabularx}{\textwidth}{@{}p{4.3cm}p{3.4cm}Lc@{}}
+\toprule
+\textbf{Yêu cầu} & \textbf{Mục tiêu} & \textbf{Kết quả mô phỏng} & \textbf{Đạt} \\ \midrule
+Mô phỏng đầu thu \LHI{} và các chân ra & Đúng nguyên lý, khớp datasheet & Độ nhạy 4,06~kV/W @1~Hz, $V_S = 0{,}81$~V, $r_\text{out} = 5{,}1$~kΩ & Đạt \\
+Đáp ứng đúng nguyên lý cảm biến & Chỉ đáp ứng với thay đổi, vi sai & Nền đổi đều: $\pm35$~mV; vật đứng yên: trở về 1,5~V & Đạt \\
+Nguồn cấp & 3,3~V đơn & Toàn mạch dùng nguồn 3,3~V & Đạt \\
+Khuếch đại dùng op-amp & $\approx 60$~dB & 62,4~dB @1~Hz (AD8608) & Đạt \\
+Lọc thông thấp dùng op-amp & Loại nhiễu tần số cao & Sallen-Key bậc 2; 50~Hz: $-47$~dB; 1~kHz: $-137$~dB & Đạt \\
+Mức ra khi không có chuyển động & 1,5~V & 1,4992~V & Đạt \\
+Dải ra khi có chuyển động & 0 -- 3~V & 0,32 -- 2,55~V; giới hạn cứng 3,0~V & Đạt \\
+Một project LTspice duy nhất & 1 file & \texttt{PIR\_LHI778.asc} & Đạt \\
+\bottomrule
+\end{tabularx}
+\end{table}

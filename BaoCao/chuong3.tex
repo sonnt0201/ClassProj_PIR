@@ -1,0 +1,53 @@
+% =====================================================================
+\chapter{TỔNG KẾT}
+\label{chap:tongket}
+% =====================================================================
+
+\section{Kết quả đạt được}
+
+Bài tập lớn đã thực hiện đầy đủ các nội dung của đề tài \emph{``Thiết kế mạch cảm biến phát hiện chuyển động PIR sử dụng LHI778''}:
+
+\begin{enumerate}
+  \item \textbf{Nguyên lý đo.} Trình bày hiệu ứng nhiệt điện và mô hình ba bước của đầu thu (nhiệt $\to$ dòng nhiệt điện $\to$ điện áp). Rút ra hàm truyền $G(s) = \dfrac{\eta pAR}{G}\dfrac{s}{(1+s\tau_T)(1+s\tau_E)}$, giải thích vì sao cảm biến chỉ đáp ứng với \emph{sự thay đổi} bức xạ và vì sao không phát hiện được vật đứng yên.
+  \item \textbf{Cấu tạo cảm biến.} Phân tích cấu tạo \LHI{}: hai phần tử gốm $2\times1$~mm$^2$ nối tiếp ngược cực, điện trở cổng, FET lặp nguồn, cửa sổ lọc 5,5 -- 14~µm và các chân D, S, G. Chứng minh nguyên lý phần tử kép (tín hiệu tỉ lệ với $i_A - i_B$) và tính điểm làm việc của mạch lặp nguồn JFET.
+  \item \textbf{Mô hình mô phỏng cảm biến.} Xây dựng mô hình vật lý của \LHI{} trong LTspice, hiệu chỉnh theo đồ thị datasheet. Độ nhạy mô phỏng 4,06~kV/W tại 1~Hz (datasheet 4,0~kV/W), đỉnh 12,7~kV/W tại 0,13~Hz. Offset $V_S = 0{,}81$~V và trở kháng ra 5,1~kΩ đều khớp với datasheet.
+  \item \textbf{Tín hiệu vào.} Mô tả chuyển động của người bằng các chuỗi xung Gauss trên hai phần tử, với tần số tín hiệu suy ra từ vận tốc, khoảng cách và hình học thấu kính. Mô phỏng năm kịch bản: đi bình thường, đi nhanh/gần, đi chậm/xa, bức xạ nền thay đổi đều, vật nóng đứng yên. Có thêm kịch bản đi ngược chiều và nguồn nhiễu 50~Hz, 1~kHz, nhiễu trắng.
+  \item \textbf{Mạch chuẩn hóa tín hiệu.} Thiết kế mạch dùng một IC AD8608 (bốn op-amp) với nguồn đơn 3,3~V:
+  \begin{itemize}
+    \item điện áp tham chiếu $\VREF = V_{DD}/2$ qua op-amp đệm;
+    \item tầng 1 khuếch đại không đảo, $K_1 = 101$, chặn DC bằng $C_1$;
+    \item mạch ghép AC dịch mức về $\VREF$ và tầng 2 với $K_2 = 16$;
+    \item bộ lọc thông thấp Sallen-Key bậc 2, $f_0 = 10{,}7$~Hz, $Q = 0{,}74$;
+    \item mạch chia áp $k = 0{,}909$ đưa dải ra về 0 -- 3~V.
+  \end{itemize}
+  Mọi giá trị linh kiện đều được tính từ công thức và yêu cầu cụ thể.
+  \item \textbf{Kết quả mô phỏng} đạt tất cả các yêu cầu:
+  \begin{itemize}
+    \item mức nghỉ 1,4992~V;
+    \item đầu ra 0,32 -- 2,55~V trong mọi kịch bản;
+    \item hệ số khuếch đại 62,4~dB tại 1~Hz, dải thông 0,5 -- 8,5~Hz;
+    \item nhiễu 50~Hz bị suy giảm 47~dB, nhiễu 1~kHz bị suy giảm 137~dB;
+    \item thay đổi bức xạ đồng đều gần như bị triệt tiêu (còn $\pm 35$~mV);
+    \item vật đứng yên chỉ tạo một xung rồi đầu ra trở về 1,5~V.
+  \end{itemize}
+\end{enumerate}
+
+Qua bài tập lớn, em nắm được quy trình thiết kế một kênh đo hoàn chỉnh: hiểu nguyên lý đo của cảm biến, suy ra đặc tính tín hiệu (biên độ, dải tần, thành phần một chiều, nhiễu), rồi thiết kế mạch chuẩn hóa sao cho đầu ra phù hợp với khâu xử lý phía sau.
+
+\section{Hạn chế}
+
+\begin{itemize}
+  \item \textbf{Mô hình cảm biến} được xây dựng từ các thông số công bố và đồ thị datasheet. Một số hằng số vật liệu ($p$, $\varepsilon_r$, bề dày) là giá trị điển hình được chọn để khớp đặc tính, không phải số liệu do nhà sản xuất cung cấp. Mô hình chưa tính tới nhiễu riêng của cảm biến, ảnh hưởng của nhiệt độ môi trường và hiện tượng áp điện khi rung.
+  \item \textbf{Tín hiệu vào} là mô hình đơn giản hóa. Thực tế, hình dạng xung phụ thuộc thiết kế thấu kính Fresnel, hình dáng người và quỹ đạo chuyển động.
+  \item \textbf{Công suất tiêu thụ}: AD8608 tiêu thụ khoảng 1,15~mA/kênh, tổng khoảng 4,7~mA. Mức này ổn với nguồn lưới nhưng quá lớn cho thiết bị chạy pin nhiều năm.
+  \item Kết quả mới dừng ở \textbf{mô phỏng}, chưa được kiểm chứng trên mạch thật.
+\end{itemize}
+
+\section{Hướng phát triển}
+
+\begin{itemize}
+  \item Dùng op-amp công suất cực thấp (ví dụ LTC6079, 54~µA/kênh, hoặc các op-amp zero-drift 1 -- 2~µA) để thiết bị chạy pin nhiều năm.
+  \item Thêm \textbf{bộ so sánh cửa sổ} (window comparator) với hai ngưỡng quanh 1,5~V, kèm mạch giữ thời gian, để tạo tín hiệu số ``có chuyển động'' như các module PIR thương mại. Hoặc đưa tín hiệu vào ADC của vi điều khiển để xử lý số: đếm xung, xác định hướng đi, lọc báo động giả.
+  \item Chạy phân tích nhiễu (\texttt{.noise}) và phân tích Monte Carlo sai số linh kiện, để đánh giá ngưỡng phát hiện và độ ổn định của mức nghỉ.
+  \item Làm mạch in thực tế với cảm biến PYD 1378 (mã thay thế của \LHI{}) và thấu kính Fresnel. Đo tín hiệu thật để hiệu chỉnh lại mô hình.
+\end{itemize}

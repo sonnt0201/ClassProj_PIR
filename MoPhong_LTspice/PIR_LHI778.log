@@ -1,0 +1,60 @@
+LTspice 26.1.1 for Windows
+Circuit: D:\User\Documents\Cảm biến và xử lý tín hiệu đo\MoPhong_LTspice\PIR_LHI778.net
+Start Time: Wed Sep 30 22:44:31 2026
+Options:gmin=1e-15
+solver = Normal
+Maximum thread count: 8
+tnom = 27
+temp = 27
+method = trap
+gmin = 1e-15
+Instance "u1a:M5": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1a:M6": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1a:M1": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1a:M2": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1a:M3": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1a:M4": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1b:M5": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1b:M6": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1b:M1": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1b:M2": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1b:M3": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1b:M4": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1c:M5": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1c:M6": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1c:M1": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1c:M2": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1c:M3": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1c:M4": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1d:M5": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1d:M6": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1d:M1": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1d:M2": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1d:M3": Length shorter than recommended for a level 2 MOSFET.
+Instance "u1d:M4": Length shorter than recommended for a level 2 MOSFET.
+Direct Newton iteration failed to find operating point.
+Starting Gmin stepping
+Gmin stepping failed to find operating point. Use".option gminsteps=0" to skip all Gmin stepping.
+Starting source stepping with srcstepmethod=0
+Source stepping succeeded in finding the operating point.
+
+Total elapsed time: 23.223 seconds.
+Total iterations: 813463
+
+Files loaded:
+D:\User\Documents\Cảm biến và xử lý tín hiệu đo\MoPhong_LTspice\PIR_LHI778.net
+C:\Users\Admin\AppData\Local\LTspice\lib\cmp\standard.jft
+C:\Users\Admin\AppData\Local\LTspice\lib\sub\ADI.lib
+
+vs_dc: AVG(V(S))=0.809465467926 FROM 0.5 TO 2.5
+vout_nghi: AVG(V(OUT))=1.49919225365 FROM 0.5 TO 2.5
+vout_max: MAX(V(OUT))=2.54738783836 FROM 0 TO 40
+vout_min: MIN(V(OUT))=0.318682193756 FROM 0 TO 40
+nhieu_truoc_loc: PP(V(A2))=0.0191359519958 FROM 0.5 TO 2.5
+nhieu_sau_loc: PP(V(A3))=0.00420773029327 FROM 0.5 TO 2.5
+sk1_pp: PP(V(OUT))=1.27449274063 FROM 2.5 TO 9.5
+sk2_pp: PP(V(OUT))=2.22870564461 FROM 9.5 TO 14.5
+sk3_pp: PP(V(OUT))=0.543479442596 FROM 14.5 TO 21.5
+sk4_pp: PP(V(OUT))=0.0697455406189 FROM 21.5 TO 30.5
+sk5_pp: PP(V(OUT))=0.667107343674 FROM 30.5 TO 40
+vout_cuoi: AVG(V(OUT))=1.50530684541 FROM 39 TO 40

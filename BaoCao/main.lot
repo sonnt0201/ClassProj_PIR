@@ -1,0 +1,27 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {1.1}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces So sánh các phương pháp phát hiện chuyển động}}{2}{table.caption.6}%
+\contentsline {table}{\numberline {1.2}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Thông số kỹ thuật của cảm biến LHi~778{}}}{5}{table.caption.8}%
+\contentsline {table}{\numberline {1.3}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Yêu cầu thiết kế}}{6}{table.caption.9}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {2.1}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Thông số điển hình của một số vật liệu nhiệt điện}}{9}{table.caption.12}%
+\contentsline {table}{\numberline {2.2}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Phép tương tự nhiệt -- điện dùng trong mô hình}}{10}{table.caption.14}%
+\contentsline {table}{\numberline {2.3}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Thông số mô hình LHi~778{} dùng trong LTspice}}{17}{table.caption.18}%
+\contentsline {table}{\numberline {2.4}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces So sánh độ nhạy của mô hình với datasheet LHi~778{}}}{18}{table.caption.19}%
+\contentsline {table}{\numberline {2.5}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Các kịch bản chuyển động mô phỏng}}{19}{table.caption.21}%
+\contentsline {table}{\numberline {2.6}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Đặc điểm tín hiệu vào (chân S) và yêu cầu tín hiệu ra}}{20}{table.caption.22}%
+\contentsline {table}{\numberline {2.7}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Thông số chính của op-amp AD8608 và kiểm tra theo yêu cầu}}{22}{table.caption.27}%
+\contentsline {table}{\numberline {2.8}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Độ suy giảm của bộ lọc Sallen-Key ở các tần số nhiễu}}{27}{table.caption.43}%
+\contentsline {table}{\numberline {2.9}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Bảng linh kiện của mạch chuẩn hóa tín hiệu}}{29}{table.caption.44}%
+\contentsline {table}{\numberline {2.10}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Điểm làm việc tĩnh (không có chuyển động)}}{31}{table.caption.46}%
+\contentsline {table}{\numberline {2.11}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Hệ số khuếch đại của từng khối theo tần số (mô phỏng AC)}}{32}{table.caption.48}%
+\contentsline {table}{\numberline {2.12}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Biên độ đỉnh -- đỉnh tại các tầng (mô phỏng quá độ)}}{33}{table.caption.51}%
+\contentsline {table}{\numberline {2.13}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Điện áp ra trong từng kịch bản}}{34}{table.caption.53}%
+\contentsline {table}{\numberline {2.14}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Biên độ nhiễu khi không có chuyển động}}{36}{table.caption.59}%
+\contentsline {table}{\numberline {2.15}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Đánh giá kết quả mô phỏng so với yêu cầu thiết kế}}{38}{table.caption.60}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\def \@chapapp {\appendixname }
+\addvspace {10\p@ }
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

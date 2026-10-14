@@ -1,0 +1,18 @@
+\addchap{LỜI NÓI ĐẦU}
+
+Cảm biến hồng ngoại thụ động (PIR -- Passive InfraRed) là loại cảm biến phát hiện chuyển động được dùng phổ biến nhất hiện nay. Nó có mặt trong công tắc đèn tự động, hệ thống báo động chống trộm, thiết bị tiết kiệm năng lượng trong tòa nhà và nhiều sản phẩm nhà thông minh. Ưu điểm của PIR là rẻ, tiêu thụ rất ít năng lượng, không phát ra bức xạ và không cần chiếu sáng.
+
+Tuy vậy, tín hiệu mà đầu thu PIR tạo ra rất nhỏ (cỡ vài trăm micro-vôn đến vài mili-vôn), nằm chồng lên một điện áp một chiều lớn hơn nhiều và thay đổi theo từng linh kiện. Tín hiệu lại có tần số rất thấp (dưới 10~Hz) và dễ bị lẫn nhiễu điện lưới. Vì vậy, muốn dùng được cảm biến PIR thì phải có một \emph{mạch chuẩn hóa tín hiệu}: loại bỏ thành phần một chiều, khuếch đại khoảng một nghìn lần, lọc nhiễu và đưa tín hiệu về một dải điện áp phù hợp với bộ biến đổi tương tự -- số (ADC).
+
+Trong bài tập lớn này, em thực hiện đề tài \emph{``Thiết kế mạch cảm biến phát hiện chuyển động PIR sử dụng LHI778''}. Nội dung gồm: tìm hiểu nguyên lý đo của đầu thu nhiệt điện, cấu tạo của cảm biến \LHI{}, xây dựng mô hình mô phỏng của cảm biến từ các thông số trong datasheet, tạo tín hiệu mô phỏng chuyển động của người, và thiết kế mạch khuếch đại -- lọc dùng khuếch đại thuật toán (op-amp) với nguồn đơn 3,3~V. Đầu ra của mạch là tín hiệu tương tự trong khoảng 0 -- 3~V, giữ ở mức 1,5~V khi không có chuyển động. Toàn bộ hệ thống được mô phỏng trên phần mềm LTspice.
+
+Em xin chân thành cảm ơn thầy \textbf{Nguyễn Hoàng Nam} đã giảng dạy và hướng dẫn em trong quá trình học tập và thực hiện bài tập lớn này. Do thời gian và kiến thức còn hạn chế, báo cáo không tránh khỏi thiếu sót. Em rất mong nhận được ý kiến góp ý của thầy để hoàn thiện hơn.
+
+\vspace{1cm}
+\begin{flushright}
+\begin{tabular}{c}
+Hà Nội, ngày 28 tháng 9 năm 2026\\
+Học viên thực hiện\\[1.6cm]
+\textbf{Nguyễn Thái Sơn}
+\end{tabular}
+\end{flushright}

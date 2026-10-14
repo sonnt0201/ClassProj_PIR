@@ -1,0 +1,395 @@
+% ---------------------------------------------------------------------
+\section{Thiết kế mạch chuẩn hóa tín hiệu}
+\label{sec:thietke}
+% ---------------------------------------------------------------------
+
+\subsection{Đặc điểm tín hiệu vào và yêu cầu tín hiệu ra}
+
+Bảng~\ref{tab:vaora} so sánh tín hiệu ở chân S của cảm biến với tín hiệu mà đầu ra cần có. Mạch chuẩn hóa phải biến đổi cột thứ nhất thành cột thứ hai.
+
+\begin{table}[!htb]
+\centering
+\caption{Đặc điểm tín hiệu vào (chân S) và yêu cầu tín hiệu ra}
+\label{tab:vaora}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.6cm}LL@{}}
+\toprule
+& \textbf{Tín hiệu vào (chân S của \LHI{})} & \textbf{Tín hiệu ra (OUT)} \\ \midrule
+Thành phần một chiều & 0,2 -- 1,55~V, khác nhau giữa các cảm biến & 1,5~V cố định \\
+Thành phần hữu ích & 0,3 -- 2~mV$_\text{pp}$ (mục~\ref{sec:uocluongP}) & tối đa $\pm 1{,}5$~V quanh 1,5~V \\
+Dải tần hữu ích & 0,1 -- 10~Hz & 0,5 -- 10~Hz \\
+Nhiễu & 50~Hz, nhiễu tần số cao, nhiễu trắng & đã được lọc \\
+Trở kháng nguồn & $\approx 5$~kΩ & nhỏ (cho ADC) \\
+Nguồn cấp & \multicolumn{2}{c}{nguồn đơn 3,3~V} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Từ bảng~\ref{tab:vaora} rút ra năm nhiệm vụ của mạch, tương ứng với năm khối trong sơ đồ hình~\ref{fig:sodokhoi}:
+\begin{enumerate}
+  \item \textbf{Tạo đất ảo $\VREF$}: vì dùng nguồn đơn, tín hiệu xoay chiều phải dao động quanh một điện áp giữa nguồn.
+  \item \textbf{Chặn thành phần một chiều} (lọc thông cao): nếu không, 0,8~V một chiều nhân khoảng 1500 lần sẽ làm op-amp bão hòa ngay.
+  \item \textbf{Khuếch đại} khoảng 1500 lần.
+  \item \textbf{Lọc thông thấp} để loại nhiễu có tần số trên dải hữu ích.
+  \item \textbf{Đưa dải ra về 0 -- 3~V} với mức nghỉ 1,5~V.
+\end{enumerate}
+
+\subsection{Tính toán hệ số khuếch đại và phân bổ cho các tầng}
+\label{sec:phanbo}
+
+\paragraph{Hệ số khuếch đại toàn mạch.} Đầu ra được phép dao động $\pm 1{,}5$~V quanh 1,5~V. Để còn dự trữ, lấy biên độ ra lớn nhất khoảng $\pm 1{,}2$ -- $1{,}3$~V. Tín hiệu vào lớn nhất (người đi gần) khoảng $\pm 0{,}9$ -- $1$~mV. Do đó:
+\begin{equation}
+  K \approx \frac{\Delta V_\text{OUT,max}}{\Delta V_\text{S,max}} \approx \frac{1{,}3~\text{V}}{0{,}9~\text{mV}} \approx 1450 \quad(\approx 63~\text{dB}).
+  \label{eq:Kreq}
+\end{equation}
+
+\paragraph{Vì sao dùng hai tầng khuếch đại?} Tầng thứ nhất nối trực tiếp (DC) với chân S, nên điện áp một chiều ở đầu ra của nó bằng $V_S$, có thể thấp tới 0,2~V. Để tầng 1 không bị bão hòa ở phía dưới khi tín hiệu vào là $\pm 1$~mV:
+\begin{equation}
+  K_1 \cdot 1~\text{mV} < V_{S,\min} - V_{OL} \approx 0{,}2 - 0{,}03~\text{V}
+  \;\Rightarrow\; K_1 < 170 .
+  \label{eq:K1max}
+\end{equation}
+Mặt khác, $K_1$ nên càng lớn càng tốt, để nhiễu của các tầng sau ít ảnh hưởng. Chọn $K_1 = 101$ (40~dB). Phần còn lại do tầng 2 và mạch chia áp đảm nhận:
+\begin{equation}
+  K = K_1 \cdot K_2 \cdot k = 101 \times 16 \times 0{,}909 \approx 1469 \quad (63{,}3~\text{dB}).
+  \label{eq:Ktotal}
+\end{equation}
+
+\paragraph{Vì sao mức nghỉ 1,5~V được tạo bằng $\VREF = 1{,}65$~V và mạch chia áp?} Có hai phương án:
+\begin{itemize}
+  \item \emph{Phương án 1}: tạo trực tiếp $\VREF = 1{,}5$~V. Khi đó op-amp (vào/ra sát nguồn, dải ra 0 -- 3,3~V) có thể dao động $-1{,}5$~V xuống dưới nhưng tới $+1{,}8$~V lên trên. Với tín hiệu lớn, đầu ra có thể vượt 3~V, không đạt yêu cầu.
+  \item \emph{Phương án 2 (được chọn)}: $\VREF = V_{DD}/2 = 1{,}65$~V, nên op-amp dao động \emph{đối xứng} $\pm1{,}65$~V trong dải 0 -- 3,3~V. Sau đó dùng mạch chia áp hệ số $k = 3{,}0/3{,}3 = 0{,}909$. Mức nghỉ trở thành $1{,}65 \times 0{,}909 = 1{,}50$~V. Dù op-amp có bão hòa, đầu ra cũng \emph{không bao giờ vượt quá} $3{,}3 \times 0{,}909 = 3{,}0$~V.
+\end{itemize}
+
+\paragraph{Vì sao dải thông chọn 0,5 -- 10~Hz?} Tín hiệu chuyển động nằm trong 0,1 -- 10~Hz (mục~\ref{sec:tanso}). Tần số cắt dưới đặt ở khoảng 0,5~Hz để loại trôi nhiệt chậm và rút ngắn thời gian quá độ. Đổi lại, chuyển động rất chậm ở xa bị suy giảm một phần. Tần số cắt trên đặt ở khoảng 10~Hz, cao hơn tần số tín hiệu lớn nhất và thấp hơn nhiều so với 50~Hz. Dải này cũng trùng với dải 0,4 -- 10~Hz mà nhà sản xuất dùng khi đo nhiễu cảm biến \cite{pyd1378}.
+
+\subsection{Lựa chọn op-amp}
+
+Các yêu cầu đối với op-amp:
+\begin{itemize}
+  \item \textbf{Nguồn đơn 3,3~V}.
+  \item \textbf{Vào và ra sát hai đường nguồn (RRIO)}: đầu vào tầng 1 ở 0,2 -- 1,55~V; bộ lọc Sallen-Key mắc kiểu lặp điện áp nên đầu vào phải theo được đầu ra trong suốt dải 0 -- 3,3~V; đầu ra phải xuống sát 0~V và lên sát 3,3~V.
+  \item \textbf{Dòng phân cực vào rất nhỏ}, vì các điện trở trong mạch lên tới 470~kΩ -- 1~MΩ.
+  \item \textbf{Điện áp lệch nhỏ và nhiễu thấp}, vì tín hiệu vào chỉ cỡ mV.
+\end{itemize}
+
+Em chọn \textbf{AD8608} của Analog Devices: bốn op-amp CMOS RRIO trong một vỏ, đủ cho bốn khối U1A -- U1D của mạch. Mô hình của nó có sẵn trong thư viện LTspice. Thông số chính cho trong bảng~\ref{tab:ad8608} \cite{ad8608}.
+
+\begin{table}[!htb]
+\centering
+\caption{Thông số chính của op-amp AD8608 và kiểm tra theo yêu cầu}
+\label{tab:ad8608}
+\small
+\begin{tabularx}{\textwidth}{@{}p{4.1cm}p{3.6cm}L@{}}
+\toprule
+\textbf{Thông số} & \textbf{AD8608} & \textbf{Kiểm tra} \\ \midrule
+Điện áp nguồn & 2,7 -- 5,5~V, nguồn đơn & Dùng được với 3,3~V \\
+Vào / ra & Rail-to-rail; $V_{OL} \approx 25$~mV, $V_{OH} \approx V_{DD}-40$~mV (tải 1~mA) & Đầu ra đạt gần 0 và 3,3~V \\
+Điện áp lệch $V_{OS}$ & 20~µV điển hình, 75~µV tối đa & Lệch ra $\le 16\times75~\text{µV} = 1{,}2$~mV \\
+Dòng phân cực $I_B$ & 0,2~pA điển hình, 1~pA tối đa & $1~\text{pA}\times 1~\text{MΩ} = 1$~µV, bỏ qua được \\
+Mật độ nhiễu áp & 8~nV/$\sqrt{\text{Hz}}$ & Nhỏ so với nhiễu cảm biến \\
+Tích khuếch đại -- băng thông & 9 -- 10~MHz & Tầng 1: $10~\text{MHz}/101 \approx 99$~kHz $\gg$ 16~Hz \\
+Dòng tiêu thụ & $\approx 1{,}15$~mA/kênh & Toàn mạch $\approx 4{,}7$~mA \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ---------------------------------------------------------------------
+\subsection{Mạch tạo điện áp tham chiếu $\VREF$}
+\label{sec:vref}
+
+\begin{figure}[!htb]
+\centering
+\begin{circuitikz}[font=\small]
+  \draw (0,0) node[op amp, noinv input up] (U) {\scriptsize U1D};
+  \coordinate (N) at ($(U.+)+(-1.4,0)$);
+  \coordinate (O) at ($(U.out)+(0.6,0)$);
+  \draw (U.+) -- (N);
+  \draw (N) to[R, l_=$R_{10}$, a^=\SI{100}{\kilo\ohm}, *-] ++(0,2.2) node[above]{$V_{DD} = 3{,}3$ V};
+  \draw (N) to[R, l_=$R_{11}$, a^=\SI{100}{\kilo\ohm}] ++(0,-2.6) node[ground]{};
+  \draw (N) -- ++(-2.6,0) to[C, l_=$C_7$, a^=\SI{10}{\micro\farad}] ++(0,-2.6) node[ground]{};
+  \draw (U.-) -- ++(-0.4,0) -- ++(0,-1.1) coordinate (m) -- (m -| O) -- (O);
+  \draw (U.out) -- (O) to[short,*-o] ++(1.2,0) node[right]{$\VREF = 1{,}65$ V};
+\end{circuitikz}
+\caption{Mạch tạo điện áp tham chiếu $\VREF$ (đất ảo)}
+\label{fig:vref}
+\end{figure}
+
+Mạch gồm cầu phân áp $R_{10}$, $R_{11}$, tụ lọc $C_7$ và op-amp U1D mắc kiểu lặp điện áp (hình~\ref{fig:vref}):
+\begin{equation}
+  \VREF = V_{DD}\,\frac{R_{11}}{R_{10}+R_{11}} = 3{,}3\times\frac{100}{100+100} = 1{,}65~\text{V}.
+  \label{eq:vref}
+\end{equation}
+
+\begin{itemize}
+  \item \textbf{Chọn $R_{10} = R_{11}$} để $\VREF$ đúng bằng nửa nguồn, cho phép tín hiệu dao động đối xứng. Giá trị 100~kΩ cho dòng qua cầu chỉ $3{,}3/200~\text{kΩ} = 16{,}5$~µA.
+  \item \textbf{Tụ $C_7$} cùng với điện trở Thévenin $R_{10}\|R_{11} = 50$~kΩ tạo bộ lọc thông thấp:
+  \begin{equation}
+    f_{C7} = \frac{1}{2\pi (R_{10}\|R_{11})\,C_7} = \frac{1}{2\pi\times\num{50e3}\times\num{10e-6}} \approx 0{,}32~\text{Hz}.
+  \end{equation}
+  Gợn nguồn ở 100~Hz bị suy giảm khoảng $100/0{,}32 \approx 310$ lần (50~dB), nên không lọt vào đất ảo.
+  \item \textbf{Vì sao cần op-amp đệm U1D?} Nút $\VREF$ nhận dòng xoay chiều từ $R_3$, $R_4$ và $C_6$. Nếu nối thẳng vào cầu phân áp có trở kháng 50~kΩ, điện trở này sẽ cộng nối tiếp với $R_4 = 10$~kΩ và làm $K_2$ giảm từ 16 xuống $1 + 150/(10+50) = 3{,}5$. Mạch lặp điện áp có trở kháng ra gần bằng 0, nên $\VREF$ là một ``đất ảo'' đúng nghĩa.
+\end{itemize}
+
+% ---------------------------------------------------------------------
+\subsection{Tầng khuếch đại thứ nhất}
+\label{sec:tang1}
+
+\begin{figure}[!htb]
+\centering
+\begin{circuitikz}[font=\small]
+  \draw (0,0) node[op amp] (U) {\scriptsize U1A};
+  \coordinate (nm) at ($(U.-)+(-0.6,0)$);
+  \coordinate (A)  at ($(nm)+(0,1.5)$);
+  \coordinate (O)  at ($(U.out)+(0.8,0)$);
+  \draw (U.-) -- (nm) -- (A);
+  \draw (A) to[R, l=$R_2$, a=\SI{1}{\mega\ohm}, *-] (A -| O);
+  \draw (A) -- ++(0,1.5) coordinate (A2) to[C, l=$C_2$, a=\SI{10}{\nano\farad}] (A2 -| O) -- (A -| O) -- (O) -- (U.out);
+  \draw (A) to[R, l_=$R_1$, a^=\SI{10}{\kilo\ohm}] ++(-2.4,0) coordinate (B)
+        to[eC, l_=$C_1$, a^=\SI{47}{\micro\farad}] ++(0,-2.6) node[ground]{};
+  \draw (U.+) -- ++(-0.9,0) -- ++(0,-1.2) node[ocirc]{} node[below]{$V_S$ (từ chân S)};
+  \draw (O) to[short,*-o] ++(1.2,0) node[right]{$V_{A1}$};
+\end{circuitikz}
+\caption{Tầng khuếch đại thứ nhất: khuếch đại không đảo có lọc thông dải}
+\label{fig:tang1}
+\end{figure}
+
+Tầng 1 (hình~\ref{fig:tang1}) là mạch \emph{khuếch đại không đảo} \cite{sedra}. Đầu vào có trở kháng rất lớn, nên không làm tải chân S của cảm biến (trở kháng ra 5~kΩ). Điểm đặc biệt: nhánh hồi tiếp xuống đất gồm $R_1$ nối tiếp $C_1$, và $R_2$ được mắc song song $C_2$.
+
+\paragraph{Hàm truyền.} Gọi $Z_1 = R_1 + \dfrac{1}{sC_1}$ và $Z_2 = R_2 \,\|\, \dfrac{1}{sC_2} = \dfrac{R_2}{1+sR_2C_2}$:
+\begin{equation}
+  H_1(s) = \frac{V_{A1}}{V_S} = 1 + \frac{Z_2}{Z_1} = 1 + \frac{s\,R_2C_1}{(1+sR_1C_1)(1+sR_2C_2)} .
+  \label{eq:H1}
+\end{equation}
+
+\paragraph{Ba vùng làm việc.}
+\begin{itemize}
+  \item \textbf{Một chiều ($s = 0$)}: $C_1$ hở mạch, $H_1(0) = 1$. Điện áp offset $V_S \approx 0{,}8$~V chỉ được lặp lại, không bị khuếch đại: $V_{A1,DC} = V_S$. Đây là lý do phải có $C_1$.
+  \item \textbf{Dải giữa} ($1/R_1C_1 \ll \omega \ll 1/R_2C_2$): $C_1$ coi như nối tắt, $C_2$ coi như hở mạch, nên
+  \begin{equation}
+    K_1 = 1 + \frac{R_2}{R_1} = 1 + \frac{1~\text{MΩ}}{10~\text{kΩ}} = 101 \quad (40{,}1~\text{dB}).
+  \end{equation}
+  \item \textbf{Tần số cao}: $C_2$ nối tắt $R_2$, hệ số khuếch đại giảm về 1.
+\end{itemize}
+
+\paragraph{Các tần số cắt.}
+\begin{align}
+  f_{H1} &= \frac{1}{2\pi R_1C_1} = \frac{1}{2\pi\times\num{10e3}\times\num{47e-6}} = 0{,}339~\text{Hz}, \label{eq:fH1}\\
+  f_{L1} &= \frac{1}{2\pi R_2C_2} = \frac{1}{2\pi\times\num{1e6}\times\num{10e-9}} = 15{,}9~\text{Hz}. \label{eq:fL1}
+\end{align}
+
+\paragraph{Vì sao chọn các giá trị này?}
+\begin{itemize}
+  \item \textbf{$R_1 = 10$~kΩ}: $R_1$ nằm trong đường tín hiệu và được khuếch đại 100 lần. Nhiễu nhiệt của nó $\sqrt{4kTR_1} \approx 12{,}9$~nV/$\sqrt{\text{Hz}}$ vẫn nhỏ, cùng bậc với nhiễu op-amp. Nếu chọn $R_1$ lớn hơn thì nhiễu tăng; nếu nhỏ hơn thì $C_1$ phải rất lớn.
+  \item \textbf{$R_2 = (K_1 - 1)R_1 = 1$~MΩ}, suy từ $K_1 = 101$ đã chọn ở mục~\ref{sec:phanbo}.
+  \item \textbf{$C_1 = 1/(2\pi R_1 f_{H1})$}: với $f_{H1} \approx 0{,}34$~Hz thì $C_1 = 47$~µF. Tụ hóa được dùng vì điện áp một chiều trên $C_1$ luôn dương ($\approx V_S = 0{,}81$~V, cực dương hướng về $R_1$).
+  \item \textbf{$C_2 = 1/(2\pi R_2 f_{L1})$}: chọn $f_{L1} \approx 16$~Hz (trên dải tín hiệu 10~Hz), cho $C_2 = 10$~nF. Tụ này giới hạn băng thông ngay từ tầng đầu, tránh khuếch đại nhiễu tần số cao 100 lần.
+\end{itemize}
+
+\paragraph{Kiểm tra biên độ.} Với tín hiệu vào lớn nhất khoảng 1,9~mV$_\text{pp}$ (kịch bản SK2), đầu ra tầng 1 dao động $101\times1{,}9~\text{mV} \approx 0{,}19$~V$_\text{pp}$ quanh 0,81~V. Như vậy đầu ra nằm trong khoảng 0,72 -- 0,90~V, xa hai đường nguồn. Thời gian quá độ khi bật nguồn cỡ $5R_1C_1 \approx 2{,}4$~s.
+
+% ---------------------------------------------------------------------
+\subsection{Mạch ghép xoay chiều và tầng khuếch đại thứ hai}
+\label{sec:tang2}
+
+\begin{figure}[!htb]
+\centering
+\begin{circuitikz}[font=\small]
+  \draw (0,0) node[op amp] (U) {\scriptsize U1B};
+  \coordinate (IN) at ($(U.+)+(-1.0,0)$);
+  \draw (U.+) -- (IN) to[C, l_=$C_3$, a^=\SI{1}{\micro\farad}] ++(-2.4,0) node[ocirc]{} node[left]{$V_{A1}$};
+  \draw (IN) to[R, l=$R_3$, a=\SI{470}{\kilo\ohm}, *-] ++(0,-2.4) node[below]{$\VREF$};
+  \coordinate (nm) at ($(U.-)+(-0.6,0)$);
+  \coordinate (A)  at ($(nm)+(0,1.5)$);
+  \coordinate (O)  at ($(U.out)+(0.8,0)$);
+  \draw (U.-) -- (nm) -- (A);
+  \draw (A) to[R, l=$R_5$, a=\SI{150}{\kilo\ohm}, *-] (A -| O);
+  \draw (A) -- ++(0,1.5) coordinate (A2) to[C, l=$C_4$, a=\SI{68}{\nano\farad}] (A2 -| O) -- (A -| O) -- (O) -- (U.out);
+  \draw (A) to[R, l_=$R_4$, a^=\SI{10}{\kilo\ohm}] ++(-2.4,0) node[left]{$\VREF$};
+  \draw (O) to[short,*-o] ++(1.2,0) node[right]{$V_{A2}$};
+\end{circuitikz}
+\caption{Mạch ghép xoay chiều $C_3$ -- $R_3$ và tầng khuếch đại thứ hai}
+\label{fig:tang2}
+\end{figure}
+
+\paragraph{Mạch ghép xoay chiều.} Tụ $C_3$ chặn điện áp một chiều $V_{A1} \approx 0{,}81$~V. Điện trở $R_3$ đưa điểm làm việc của đầu vào U1B về $\VREF = 1{,}65$~V. Đây là mạch \emph{dịch mức}: sau $C_3$, tín hiệu không còn phụ thuộc vào offset của từng cảm biến. Hàm truyền là một bộ lọc thông cao bậc 1:
+\begin{equation}
+  H_C(s) = \frac{sR_3C_3}{1+sR_3C_3},\qquad
+  f_{H2} = \frac{1}{2\pi R_3C_3} = \frac{1}{2\pi\times\num{470e3}\times\num{1e-6}} = 0{,}339~\text{Hz}.
+  \label{eq:HC}
+\end{equation}
+\begin{itemize}
+  \item Chọn $f_{H2} = f_{H1}$. Hai khâu thông cao giống nhau cho tần số cắt dưới chung $f_H = f_{H1}/\sqrt{\sqrt2 - 1} \approx 0{,}339/0{,}644 \approx 0{,}53$~Hz, và độ dốc 40~dB/decade để chặn trôi chậm.
+  \item $R_3 = 470$~kΩ lớn để $C_3$ chỉ cần 1~µF (tụ màng/gốm không phân cực). Điện áp trên $C_3$ là $V_{A1} - \VREF \approx -0{,}84$~V, âm, nên \emph{không} được dùng tụ hóa ở vị trí này.
+  \item Sai số do dòng phân cực: $I_B R_3 = 1~\text{pA}\times470~\text{kΩ} \approx 0{,}5$~µV, bỏ qua được.
+\end{itemize}
+
+\paragraph{Tầng khuếch đại thứ hai.} U1B mắc khuếch đại không đảo, lấy $\VREF$ làm gốc:
+\begin{equation}
+  H_2(s) = \frac{V_{A2}-\VREF}{V_{+}-\VREF} = 1 + \frac{R_5/R_4}{1+sR_5C_4},\qquad
+  K_2 = 1+\frac{R_5}{R_4} = 1+\frac{150}{10} = 16~(24{,}1~\text{dB}).
+  \label{eq:H2}
+\end{equation}
+\begin{equation}
+  f_{L2} = \frac{1}{2\pi R_5C_4} = \frac{1}{2\pi\times\num{150e3}\times\num{68e-9}} = 15{,}6~\text{Hz}.
+\end{equation}
+\begin{itemize}
+  \item $K_2 = 16$ lấy từ phân bổ ở \eqref{eq:Ktotal}: $K_2 = K/(K_1 k) \approx 1469/(101\times0{,}909) = 16$.
+  \item $R_4$ nối thẳng vào $\VREF$, không cần tụ nối tiếp. Lý do: đầu vào đã ở đúng $\VREF$ nhờ $R_3$, nên chỉ có điện áp lệch của op-amp bị khuếch đại 16 lần ($\le 1{,}2$~mV). Sai số này không đáng kể so với dải 3~V.
+  \item $C_4 = 68$~nF chọn để $f_{L2} \approx f_{L1}$, tạo thêm một khâu lọc thông thấp bậc 1.
+\end{itemize}
+
+% ---------------------------------------------------------------------
+\subsection{Bộ lọc thông thấp Sallen-Key bậc 2}
+\label{sec:sallenkey}
+
+\begin{figure}[!htb]
+\centering
+\begin{circuitikz}[font=\small]
+  \draw (0,0) node[op amp, noinv input up] (U) {\scriptsize U1C};
+  \coordinate (F2) at ($(U.+)+(-1.0,0)$);
+  \coordinate (O)  at ($(U.out)+(0.6,0)$);
+  \draw (U.+) -- (F2) to[R, l_=$R_7$, a^=\SI{100}{\kilo\ohm}, *-] ++(-2.0,0) coordinate (F1)
+        to[R, l_=$R_6$, a^=\SI{100}{\kilo\ohm}, *-] ++(-2.0,0) node[ocirc]{} node[left]{$V_{A2}$};
+  \draw (F1) to[C, l=$C_5$, a=\SI{220}{\nano\farad}] ++(0,1.9) coordinate (T) -- (T -| O) -- (O);
+  \draw (F2) to[C, l=$C_6$, a=\SI{100}{\nano\farad}] ++(0,-2.3) node[below]{$\VREF$};
+  \draw (U.-) -- ++(-0.4,0) -- ++(0,-1.0) coordinate (m) -- (m -| O) -- (O) -- (U.out);
+  \draw (O) to[short,*-] ++(0.3,0) node[above]{$V_{A3}$}
+        to[R, l=$R_8$, a=\SI{10}{\kilo\ohm}] ++(2.0,0) coordinate (D);
+  \draw (D) to[R, l_=$R_9$, a^=\SI{100}{\kilo\ohm}, *-] ++(0,-2.4) node[ground]{};
+  \draw (D) to[short,-o] ++(0.9,0) node[right]{OUT};
+\end{circuitikz}
+\caption{Bộ lọc thông thấp Sallen-Key bậc 2 (U1C) và mạch chia áp đầu ra $R_8$ -- $R_9$}
+\label{fig:sallenkey}
+\end{figure}
+
+\paragraph{Chọn cấu trúc.} Bộ lọc Sallen-Key hệ số 1 (hình~\ref{fig:sallenkey}) \cite{sallenkey,karki} được chọn vì:
+\begin{itemize}
+  \item là bộ lọc tích cực bậc 2 chỉ cần \emph{một} op-amp, hai điện trở và hai tụ;
+  \item hệ số khuếch đại bằng 1 và không đảo pha, nên giữ nguyên hệ số và dấu đã tính ở các tầng trước;
+  \item op-amp mắc kiểu lặp điện áp có trở kháng ra rất nhỏ, đủ để kéo mạch chia áp phía sau;
+  \item độ nhạy của đặc tuyến với sai số linh kiện thấp.
+\end{itemize}
+
+\paragraph{Hàm truyền.} Gọi $F_1$ là nút giữa $R_6$ và $R_7$, $F_2$ là đầu vào không đảo. Op-amp lặp điện áp nên $V_{F2} = V_{A3}$. Lấy $\VREF$ làm gốc xoay chiều và viết định luật Kirchhoff cho dòng tại $F_2$ và $F_1$:
+\begin{align*}
+  F_2:&\quad \frac{V_{F1}-V_{A3}}{R_7} = sC_6\,V_{A3} \;\Rightarrow\; V_{F1} = V_{A3}\,(1+sR_7C_6),\\
+  F_1:&\quad \frac{V_{A2}-V_{F1}}{R_6} = \frac{V_{F1}-V_{A3}}{R_7} + sC_5\,(V_{F1}-V_{A3}).
+\end{align*}
+Khử $V_{F1}$, ta được:
+\begin{equation}
+  H_{SK}(s) = \frac{V_{A3}}{V_{A2}} = \frac{1}{1 + s\,C_6(R_6+R_7) + s^2 R_6R_7C_5C_6}
+  = \frac{\omega_0^2}{s^2 + \dfrac{\omega_0}{Q}s + \omega_0^2},
+  \label{eq:HSK}
+\end{equation}
+với
+\begin{equation}
+  \omega_0 = \frac{1}{\sqrt{R_6R_7C_5C_6}},\qquad
+  Q = \frac{\sqrt{R_6R_7C_5C_6}}{C_6(R_6+R_7)} \;\xrightarrow{R_6=R_7=R}\; Q = \frac{1}{2}\sqrt{\frac{C_5}{C_6}} .
+  \label{eq:w0Q}
+\end{equation}
+
+\paragraph{Các bước tính toán.}
+\begin{enumerate}
+  \item \textbf{Chọn đặc tuyến Butterworth} ($Q = 1/\sqrt2 = 0{,}707$): đáp ứng phẳng nhất trong dải thông, không có đỉnh cộng hưởng. Từ \eqref{eq:w0Q}: $C_5 = 4Q^2 C_6 = 2\,C_6$.
+  \item \textbf{Chọn $R_6 = R_7 = R = 100$~kΩ}: đủ lớn để tụ không quá cồng kềnh, đủ nhỏ để nhiễu nhiệt và sai số do $I_B$ không đáng kể. Op-amp cũng kéo được dễ dàng.
+  \item \textbf{Chọn tần số riêng} $f_0 \approx 10$~Hz: trên tần số tín hiệu lớn nhất (khoảng 7~Hz) và thấp hơn nhiều so với 50~Hz. Khi đó:
+  \begin{gather*}
+    C_6 = \frac{1}{2\pi f_0 R\sqrt2} = \frac{1}{2\pi\times10\times\num{100e3}\times1{,}414} = 112{,}5~\text{nF} \;\rightarrow\; \textbf{100~nF},\\
+    C_5 = 2C_6 = 200~\text{nF} \;\rightarrow\; \textbf{220~nF}
+  \end{gather*}
+  (lấy theo dãy giá trị tiêu chuẩn E6).
+  \item \textbf{Tính lại với giá trị thực}:
+  \begin{gather*}
+    f_0 = \frac{1}{2\pi\times\num{100e3}\times\sqrt{\num{220e-9}\times\num{100e-9}}} = 10{,}7~\text{Hz},\\
+    Q = \frac12\sqrt{\frac{220}{100}} = 0{,}742 .
+  \end{gather*}
+  $Q = 0{,}742$ rất gần Butterworth. Đỉnh cộng hưởng chỉ 0,03~dB.
+\end{enumerate}
+
+\paragraph{Tần số cắt và độ suy giảm.} Mô-đun hàm truyền với $x = f/f_0$:
+\begin{equation}
+  |H_{SK}(f)| = \frac{1}{\sqrt{(1-x^2)^2 + (x/Q)^2}} .
+  \label{eq:HSKmag}
+\end{equation}
+Giải $|H_{SK}| = 1/\sqrt2$ được tần số cắt $-3$~dB là $f_c \approx 1{,}047 f_0 = 11{,}2$~Hz. Bảng~\ref{tab:suygiam} cho độ suy giảm tính theo \eqref{eq:HSKmag} ở các tần số nhiễu.
+
+\begin{table}[!htb]
+\centering
+\caption{Độ suy giảm của bộ lọc Sallen-Key ở các tần số nhiễu}
+\label{tab:suygiam}
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Tần số} & 10~Hz & 50~Hz & 100~Hz & 1~kHz \\ \midrule
+$x = f/f_0$ & 0,93 & 4,66 & 9,32 & 93,2 \\
+$|H_{SK}|$ tính toán & $-2{,}0$~dB & $-26{,}7$~dB & $-38{,}7$~dB & $-78{,}8$~dB \\
+$|H_{SK}|$ mô phỏng & $-2{,}0$~dB & $-26{,}8$~dB & $-38{,}8$~dB & $-78{,}7$~dB \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Bộ lọc bậc 2 có độ dốc $-40$~dB/decade, gấp đôi một khâu $RC$ bậc 1. Kết hợp với hai khâu bậc 1 ở tầng 1 và tầng 2, toàn mạch có độ dốc tới $-80$~dB/decade ở tần số cao.
+
+% ---------------------------------------------------------------------
+\subsection{Mạch chia áp đầu ra}
+\label{sec:chiaap}
+
+Mạch chia áp $R_8$, $R_9$ (hình~\ref{fig:sallenkey}) nhân tín hiệu với:
+\begin{equation}
+  k = \frac{R_9}{R_8+R_9} = \frac{100}{10+100} = 0{,}909 = \frac{3{,}0~\text{V}}{3{,}3~\text{V}} .
+  \label{eq:k}
+\end{equation}
+\begin{itemize}
+  \item Khi không có chuyển động: $V_\text{OUT} = k\,\VREF = 0{,}909\times1{,}65 = 1{,}50$~V.
+  \item Dải ra: $V_{A3} \in [0;\,3{,}3]$~V $\Rightarrow$ $V_\text{OUT} \in [0;\,3{,}0]$~V, \emph{luôn} đúng kể cả khi op-amp bão hòa.
+  \item Trở kháng ra $R_8\|R_9 = 9{,}1$~kΩ. Giá trị này phù hợp với đầu vào ADC của vi điều khiển, thường yêu cầu trở kháng nguồn dưới khoảng 10~kΩ. Nếu cần, có thể thêm một tụ 100~nF từ OUT xuống đất để làm bộ lọc chống chồng phổ (tần số cắt khoảng 175~Hz).
+  \item Vì $\VREF$ và $k$ đều là tỉ số điện trở theo $V_{DD}$, mức nghỉ tỉ lệ với nguồn. Nếu ADC dùng chính $V_{DD}$ làm tham chiếu, kết quả số không phụ thuộc vào dao động nguồn.
+\end{itemize}
+
+% ---------------------------------------------------------------------
+\subsection{Hàm truyền toàn mạch và bảng linh kiện}
+\label{sec:toanmach}
+
+Hàm truyền từ chân S tới đầu ra là tích các khâu:
+\begin{equation}
+  H(s) = \frac{V_\text{out}}{V_s} = H_1(s)\cdot H_C(s)\cdot H_2(s)\cdot H_{SK}(s)\cdot k .
+  \label{eq:Htong}
+\end{equation}
+Tại 1~Hz, lần lượt: $|H_1| = 95{,}5$ (39,6~dB), $|H_C H_2| = 15{,}2$ (23,6~dB), $|H_{SK}| \approx 1$, $k = 0{,}909$ ($-0{,}83$~dB). Tổng cộng $|H(1\,\text{Hz})| \approx 1314$ (62,4~dB). Trong dải giữa, hệ số khuếch đại đạt cực đại khoảng $K = 1469$ (63,3~dB). Nối tiếp với cảm biến, độ nhạy của cả hệ thống tại 1~Hz là:
+\begin{equation}
+  S_\text{hệ} = R_{V,S}\cdot|H| \approx 4{,}06~\text{mV/µW} \times 1314 \approx 5{,}3~\text{V/µW}.
+  \label{eq:Shethong}
+\end{equation}
+Nghĩa là một dao động bức xạ 0,1~µW ở 1~Hz trên phần tử cho dao động khoảng $\pm 0{,}53$~V ở đầu ra.
+
+\begin{table}[!htb]
+\centering
+\caption{Bảng linh kiện của mạch chuẩn hóa tín hiệu}
+\label{tab:bom}
+\small
+\begin{tabularx}{\textwidth}{@{}p{1.3cm}p{1.7cm}p{3.8cm}L@{}}
+\toprule
+\textbf{Ký hiệu} & \textbf{Giá trị} & \textbf{Vai trò} & \textbf{Công thức / lý do chọn} \\ \midrule
+$R_S$ & 47~kΩ & Tải nguồn của FET & Theo khuyến nghị của datasheet \\
+U1A -- D & AD8608 & 4 op-amp RRIO & Nguồn đơn 2,7 -- 5,5~V, $I_B \le 1$~pA \\
+$R_1$ & 10~kΩ & Nhánh khuếch đại tầng 1 & Nhiễu thấp; $K_1 = 1+R_2/R_1$ \\
+$C_1$ & 47~µF (hóa) & Chặn DC ở tầng 1 & $f_{H1}=1/(2\pi R_1C_1)=0{,}34$~Hz \\
+$R_2$ & 1~MΩ & Hồi tiếp tầng 1 & $R_2 = (K_1-1)R_1$, $K_1 = 101$ \\
+$C_2$ & 10~nF & Lọc thông thấp tầng 1 & $f_{L1} = 1/(2\pi R_2C_2) = 15{,}9$~Hz \\
+$C_3$ & 1~µF (màng) & Ghép xoay chiều & $f_{H2}=1/(2\pi R_3C_3)=0{,}34$~Hz \\
+$R_3$ & 470~kΩ & Dịch mức về $\VREF$ & Lớn để $C_3$ nhỏ; $I_BR_3$ không đáng kể \\
+$R_4$ & 10~kΩ & Nhánh khuếch đại tầng 2 & $K_2 = 1+R_5/R_4 = 16$ \\
+$R_5$ & 150~kΩ & Hồi tiếp tầng 2 & $R_5 = (K_2-1)R_4$ \\
+$C_4$ & 68~nF & Lọc thông thấp tầng 2 & $f_{L2} = 1/(2\pi R_5C_4) = 15{,}6$~Hz \\
+$R_6$, $R_7$ & 100~kΩ & Lọc Sallen-Key & $R_6=R_7=R$ để $Q = \frac12\sqrt{C_5/C_6}$ \\
+$C_5$ & 220~nF & Lọc Sallen-Key (hồi tiếp) & $C_5 \approx 2C_6$ (Butterworth) \\
+$C_6$ & 100~nF & Lọc Sallen-Key (xuống $\VREF$) & $f_0 = 10{,}7$~Hz, $Q = 0{,}74$ \\
+$R_8$, $R_9$ & 10~kΩ, 100~kΩ & Chia áp đầu ra & $k = R_9/(R_8+R_9) = 3{,}0/3{,}3$ \\
+$R_{10}$, $R_{11}$ & 100~kΩ & Cầu phân áp $\VREF$ & $\VREF = V_{DD}/2 = 1{,}65$~V \\
+$C_7$ & 10~µF & Lọc nhiễu nguồn cho $\VREF$ & $f_{C7} = 0{,}32$~Hz \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Sơ đồ đầy đủ của toàn bộ hệ thống (mô hình cảm biến, tín hiệu vào, nguồn nhiễu và mạch chuẩn hóa), đúng như đã vẽ trong file LTspice, được trình bày ở hình~\ref{fig:ltspice}.

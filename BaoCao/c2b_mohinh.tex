@@ -1,0 +1,193 @@
+% ---------------------------------------------------------------------
+\section{Xây dựng mô hình mô phỏng của \LHI{}}
+\label{sec:mohinh}
+% ---------------------------------------------------------------------
+
+Nhà sản xuất không cung cấp mô hình SPICE cho \LHI{}. Vì vậy em xây dựng một mô hình vật lý dựa trên các phương trình ở mục~\ref{sec:mohinhtoan}, rồi chọn thông số sao cho đáp ứng của mô hình khớp với datasheet. Mô hình gồm ba phần, đúng theo cấu tạo thật của cảm biến:
+\begin{enumerate}
+  \item \textbf{mô hình nhiệt} của từng phần tử A, B (phương trình~\eqref{eq:nhiet});
+  \item \textbf{hai phần tử nhiệt điện} nối tiếp ngược cực, mỗi phần tử là nguồn dòng $i_p = pA\,\dd T/\dd t$ song song với $C_E$ (phương trình~\eqref{eq:ip});
+  \item \textbf{điện trở cổng $R_G$, JFET lặp nguồn, tụ $C_\text{EMI}$} và các chân D, S, G.
+\end{enumerate}
+
+\subsection{Hàm truyền của \LHI{} tại chân S}
+
+Kết hợp hàm truyền của một đầu thu \eqref{eq:Gs}, hệ số $1/2$ của cấu hình phần tử kép \eqref{eq:dual} và hệ số truyền của mạch lặp nguồn \eqref{eq:Asf}, độ nhạy tại chân S khi chỉ phần tử A được chiếu là:
+\begin{gather}
+  R_{V,S}(\omega) = \underbrace{A_{sf}\,\frac{\eta\,p\,A\,R_G}{2\,G}}_{K_S}\cdot
+  \frac{\omega}{\sqrt{1+\omega^2\tau_T^2}\,\sqrt{1+\omega^2\tau_E^2}}, \label{eq:RVS}\\
+  \tau_T = \frac{H}{G},\qquad \tau_E = R_G\left(\frac{C_E}{2}+C_\text{in}\right). \nonumber
+\end{gather}
+Mô hình có ba thông số quyết định hình dạng đáp ứng: hằng số tỉ lệ $K_S$ và hai hằng số thời gian $\tau_T$, $\tau_E$.
+
+\subsection{Xác định thông số từ đồ thị datasheet}
+
+Datasheet \LHI{} \cite{lhi778-ds} có đồ thị độ nhạy theo tần số (0,01 -- 10~Hz). Đọc từ đồ thị được các điểm sau: $R_V(0{,}01\,\text{Hz}) \approx 2{,}4$~kV/W; cực đại khoảng 12~kV/W tại $f_p \approx 0{,}13$~Hz; $R_V(1\,\text{Hz}) = 4{,}0$~kV/W (cũng là giá trị điển hình trong bảng thông số); $R_V(10\,\text{Hz}) \approx 0{,}38$~kV/W. Từ đó xác định thông số theo các bước:
+
+\begin{enumerate}
+  \item Tỉ số $R_V(10\,\text{Hz})/R_V(1\,\text{Hz}) \approx 0{,}095 \approx 1/10$. Độ nhạy giảm đúng 20~dB/decade, chứng tỏ cả hai tần số cắt $1/(2\pi\tau_T)$ và $1/(2\pi\tau_E)$ đều nằm dưới 1~Hz.
+  \item Tần số đỉnh cho tích hai hằng số thời gian:
+  $\tau_T\tau_E = \dfrac{1}{(2\pi f_p)^2} = \dfrac{1}{(2\pi\cdot 0{,}13)^2} \approx 1{,}5~\text{s}^2 .$
+  \item Ở vùng tần số cao, $R_{V,S} \approx K_S/(\omega\,\tau_T\tau_E)$. Từ $R_V(1\,\text{Hz}) = 4{,}0$~kV/W suy ra
+  $K_S \approx 4000 \times 2\pi \times 1{,}5 \times 1{,}04 \approx \num{39000}$~V·s/W (hệ số 1,04 hiệu chỉnh việc 1~Hz chưa nằm hẳn trên tiệm cận).
+  \item Giá trị đỉnh $R_{V,\max} = K_S/(\tau_T+\tau_E) \approx 12$~kV/W cho $\tau_T + \tau_E \approx 3{,}2$~s. Kết hợp với bước 2 và điểm 0,01~Hz, chọn được
+  \begin{equation*}
+    \boxed{\tau_E = 2{,}5~\text{s},\qquad \tau_T = 0{,}6~\text{s},\qquad K_S \approx \num{39000}~\text{V·s/W}.}
+  \end{equation*}
+  Hằng số lớn hơn được gán cho $\tau_E$, vì $R_G$ cỡ hàng chục GΩ nhân với điện dung hàng chục pF cho vài giây. Còn $\tau_T$ cỡ 0,1 -- 1~s là giá trị thường gặp của phần tử gốm mỏng \cite{whatmore}.
+\end{enumerate}
+
+\subsection{Thông số vật lý của mô hình}
+
+Từ ba đại lượng $\tau_T$, $\tau_E$, $K_S$, em chọn bộ thông số vật lý có giá trị hợp lý với gốm nhiệt điện. Kết quả được tổng hợp trong bảng~\ref{tab:thongsomohinh}.
+
+\begin{itemize}
+  \item Điện dung một phần tử: $C_E = \dfrac{\varepsilon_0\varepsilon_r A}{d} = \dfrac{\num{8.854e-12}\times 200\times \num{2e-6}}{\num{50e-6}} = 70{,}8$~pF.
+  \item Điện dung tại cổng: $C = C_E/2 + C_\text{in} \approx 35{,}4 + 1 \approx 36{,}4$~pF (điện dung vào của mạch lặp nguồn nhỏ nhờ hiệu ứng bootstrap).
+  \item Điện trở cổng: $R_G = \tau_E/C = 2{,}5/\num{36.4e-12} \approx 68{,}7$~GΩ. Chọn $R_G = 68$~GΩ, cho $\tau_E \approx 2{,}48$~s.
+  \item Nhiệt dung: $H = c'Ad = \num{2.6e6}\times\num{2e-6}\times\num{50e-6} = \num{2.6e-4}$~J/K.
+  \item Độ dẫn nhiệt: $G = H/\tau_T = \num{2.6e-4}/0{,}6 = \num{4.33e-4}$~W/K.
+  \item Hệ số nhiệt điện, suy ra từ $K_S$:
+  \begin{equation*}
+    p = \frac{2\,G\,K_S}{A_{sf}\,\eta\,A\,R_G} = \frac{2\times\num{4.33e-4}\times\num{39000}}{0{,}89\times0{,}75\times\num{2e-6}\times\num{68e9}} \approx \num{3.7e-4}~\text{C/(m}^2\text{K)}.
+  \end{equation*}
+  Giá trị này nằm trong khoảng điển hình của gốm PZT (bảng~\ref{tab:vatlieu}).
+\end{itemize}
+
+\begin{table}[!htb]
+\centering
+\caption{Thông số mô hình \LHI{} dùng trong LTspice}
+\label{tab:thongsomohinh}
+\small
+\begin{tabularx}{\textwidth}{@{}p{4.6cm}p{2.6cm}L@{}}
+\toprule
+\textbf{Thông số} & \textbf{Giá trị} & \textbf{Nguồn gốc} \\ \midrule
+Diện tích phần tử $A$ & 2~mm$^2$ & Datasheet ($2\times1$~mm) \\
+Bề dày $d$, $\varepsilon_r$, $c'$ & 50~µm; 200; $\num{2.6e6}$~J/(m$^3$K) & Giá trị điển hình của gốm PZT \\
+Hệ số nhiệt điện $p$ & $\num{3.7e-4}$~C/(m$^2$K) & Hiệu chỉnh để $R_V(1\,\text{Hz}) = 4{,}0$~kV/W \\
+Hệ số hấp thụ hiệu dụng $\eta$ & 0,75 & Cửa sổ lọc truyền qua $\ge 77$\% \\
+$C_E$ (mỗi phần tử) & 70,8~pF & Tính theo \eqref{eq:CE} \\
+$H$, $G$, $\tau_T$ & $\num{2.6e-4}$~J/K; $\num{4.33e-4}$~W/K; 0,6~s & Khớp đồ thị datasheet \\
+$R_G$, $\tau_E$ & 68~GΩ; 2,5~s & Khớp đồ thị datasheet \\
+Độ lệch hai phần tử $m$ & 1\% & Datasheet (match điển hình) \\
+JFET: $V_{TO}$, $\beta$, $\lambda$ & $-1{,}0$~V; $\num{4.5e-4}$~A/V$^2$; 0,02~V$^{-1}$ & Khớp $V_S$ và trở kháng ra \\
+$C_\text{EMI}$, $R_S$ & 47~pF; 47~kΩ & Sơ đồ trong datasheet; khuyến nghị $R_S$ \\
+Điện trở rò mỗi phần tử & 1~TΩ & Gốm có điện trở suất rất lớn \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Cài đặt mô hình trong LTspice}
+
+Mô hình được cài đặt bằng các phần tử cơ bản của LTspice (hình~\ref{fig:ltspice}, danh sách lệnh ở phụ lục~\ref{app:ltspice}). Công suất tới là nguồn áp hành vi \texttt{BIRA}, \texttt{BIRB} (1~V = 1~µW). Chuyển đổi nhiệt dùng phép tương tự ở bảng~\ref{tab:tuongtu}: nguồn dòng \texttt{I=ETA*1e-6*V(PA)} nạp cho tụ $H$ song song điện trở $1/G$. Dòng nhiệt điện là nguồn dòng hành vi \texttt{I=PPY*AEL*ddt(V(TA))}, đúng công thức~\eqref{eq:ip}. Phần tử B có thêm hệ số $(1-m)$ để mô phỏng độ lệch 1\%.
+
+
+Hai lưu ý về mặt tính toán số khi mô phỏng mô hình này:
+\begin{itemize}
+  \item Dòng nhiệt điện rất nhỏ (dưới 1~pA) và điện trở cổng rất lớn (68~GΩ). Theo mặc định, SPICE mắc thêm độ dẫn $g_\text{min} = 10^{-12}$~S song song với mỗi tiếp giáp PN của JFET. Độ dẫn giả này bơm vài pA vào cực cổng và làm lệch $V_S$ khoảng 0,26~V. Vì vậy mô phỏng đặt \texttt{.options gmin=1e-15}.
+  \item Hàm lũy thừa \texttt{**} của LTspice không xử lý được cơ số âm. Các xung Gauss vì vậy được viết dưới dạng $(t-c)\cdot(t-c)$.
+\end{itemize}
+
+\subsection{Kiểm chứng mô hình với datasheet}
+
+Chạy phân tích AC với công suất tới phần tử A bằng 1~µW, rồi đo điện áp chân S. Kết quả so sánh với datasheet được cho trong bảng~\ref{tab:kiemchung} và hình~\ref{fig:dapungcb}.
+
+\begin{table}[!htb]
+\centering
+\caption{So sánh độ nhạy của mô hình với datasheet \LHI{}}
+\label{tab:kiemchung}
+\small
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Tần số} & \textbf{Datasheet [kV/W]} & \textbf{Mô hình [kV/W]} & \textbf{Sai lệch} \\ \midrule
+0,01~Hz & $\approx 2{,}4$ (đọc đồ thị) & 2,34 & $-3$\% \\
+0,13~Hz (đỉnh) & $\approx 12$ (đọc đồ thị) & 12,65 & $+5$\% \\
+1~Hz & 4,0 (điển hình), $\ge 3{,}3$ & 4,06 & $+1{,}5$\% \\
+10~Hz & $\approx 0{,}38$ (đọc đồ thị) & 0,42 & $+10$\% \\
+\midrule
+Offset $V_S$ & 0,2 -- 1,55~V & 0,809~V & trong dải \\
+Trở kháng ra & 5~kΩ (điển hình) & 5,1~kΩ & $+2$\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{loglogaxis}[width=0.9\textwidth,height=7.2cm,xmin=0.01,xmax=10,ymin=0.1,ymax=100,
+  xlabel={Tần số [Hz]},ylabel={Độ nhạy $R_V$ [kV/W]},legend pos=north east,
+  log ticks with fixed point]
+  \addplot[c1,very thick] table[x=f,y=R] {data/ac.dat};
+  \addlegendentry{Mô hình LTspice, $V_S$ khi $P_A = 1$ µW}
+  \addplot[only marks,mark=*,mark size=3pt,c2] coordinates {(0.01,2.4) (0.13,12) (1,4.0) (10,0.38)};
+  \addlegendentry{Datasheet \LHI{} (đọc đồ thị)}
+  \addplot[cgray,dashed,domain=0.01:10,samples=2] {39000*2*pi*x/1000};
+  \addlegendentry{Tiệm cận $+20$ dB/dec}
+  \addplot[cgray,dotted,thick,domain=0.01:10,samples=2] {39000/(2*pi*x*1.5)/1000};
+  \addlegendentry{Tiệm cận $-20$ dB/dec}
+\end{loglogaxis}
+\end{tikzpicture}
+\caption{Độ nhạy của mô hình \LHI{} theo tần số so với datasheet}
+\label{fig:dapungcb}
+\end{figure}
+
+Mô hình khớp với datasheet trong toàn dải 0,01 -- 10~Hz với sai lệch dưới 10\%. Độ nhạy cao nhất nằm trong khoảng 0,05 -- 0,33~Hz (dải $-3$~dB của cảm biến). Trên 1~Hz, độ nhạy giảm 20~dB/decade. Nghĩa là \emph{bản thân cảm biến đã là một bộ lọc thông dải}: nó chặn thành phần một chiều và làm suy giảm tín hiệu nhanh.
+
+% ---------------------------------------------------------------------
+\section{Mô hình tín hiệu vào -- chuyển động của người}
+\label{sec:tinhieuvao}
+% ---------------------------------------------------------------------
+
+\subsection{Mô tả toán học}
+
+Tín hiệu vào của mô phỏng là công suất bức xạ hồng ngoại $P_A(t)$, $P_B(t)$ tới hai phần tử (đơn vị µW). Theo phân tích ở mục~\ref{sec:dual}, khi người đi qua một vùng của thấu kính, ảnh nhiệt lướt qua phần tử A rồi phần tử B. Mỗi lần lướt qua được mô tả bằng một xung Gauss:
+\begin{equation}
+  g(t;\,c,\,w) = \exp\!\left[-\frac{(t-c)^2}{w^2}\right],
+  \label{eq:gauss}
+\end{equation}
+với $c$ là thời điểm ảnh nằm giữa phần tử và $w$ là độ rộng xung (phụ thuộc kích thước người và tốc độ). Người đi qua $n$ vùng liên tiếp, mỗi vùng mất thời gian $T$, tạo ra chuỗi xung:
+\begin{align}
+  P_A(t) &= P\sum_{k=0}^{n-1} g(t;\,S+kT,\,w), \label{eq:PA}\\
+  P_B(t) &= P\sum_{k=0}^{n-1} g\!\left(t;\,S+kT+\tfrac{T}{2},\,w\right), \label{eq:PB}
+\end{align}
+trong đó $P$ là biên độ công suất (phụ thuộc khoảng cách, kích thước người, mục~\ref{sec:uocluongP}) và $S$ là thời điểm bắt đầu. Phần tử B trễ nửa chu kỳ so với A. Tần số cơ bản của tín hiệu hiệu $P_A - P_B$ là $f_s = 1/T$, tương ứng với công thức~\eqref{eq:fs}.
+
+Bức xạ nền thay đổi đều (hoặc vật nóng xuất hiện rồi đứng yên) được mô tả bằng hàm bước mềm:
+\begin{equation}
+  \sigma(t;\,c,\,\delta) = \frac{1}{2}\left[1+\tanh\frac{2(t-c)}{\delta}\right],
+  \label{eq:sstep}
+\end{equation}
+với $c$ là thời điểm thay đổi và $\delta$ là thời gian tăng.
+
+\subsection{Các kịch bản mô phỏng}
+
+Tín hiệu vào gồm năm kịch bản nối tiếp nhau trong 40~s (bảng~\ref{tab:kichban}). Mỗi kịch bản kiểm tra một tính chất của cảm biến và của mạch.
+
+\begin{table}[!htb]
+\centering
+\caption{Các kịch bản chuyển động mô phỏng}
+\label{tab:kichban}
+\small
+\begin{tabularx}{\textwidth}{@{}p{1.1cm}p{1.7cm}p{4.0cm}p{3.3cm}L@{}}
+\toprule
+\textbf{Tên} & \textbf{Thời gian} & \textbf{Tình huống} & \textbf{Thông số} & \textbf{Mục đích kiểm tra} \\ \midrule
+SK1 & 3 -- 6,6~s & Người đi bình thường, cách khoảng 3~m & $P=0{,}13$~µW, $T=0{,}8$~s, $w=0{,}15$~s, $n=4$ & Tín hiệu điển hình, $f_s = 1{,}25$~Hz \\
+SK2 & 10 -- 12~s & Người đi nhanh hoặc ở gần & $P=0{,}35$~µW, $T=0{,}5$~s, $w=0{,}09$~s, $n=4$ & Tín hiệu lớn nhất, $f_s = 2$~Hz \\
+SK3 & 15 -- 18,5~s & Người đi chậm hoặc ở xa & $P=0{,}04$~µW, $T=1{,}4$~s, $w=0{,}25$~s, $n=3$ & Tín hiệu nhỏ, $f_s = 0{,}7$~Hz \\
+SK4 & 22 -- 26~s & Bức xạ nền tăng đều trên cả hai phần tử (nắng, gió nóng) & $P_A=P_B=2$~µW, $\delta=1$~s & Triệt tiêu nhiễu chung \\
+SK5 & từ 31~s & Vật nóng xuất hiện trước phần tử A rồi đứng yên & $P_A$ tăng 0,12~µW, $\delta=0{,}3$~s & Không phát hiện vật đứng yên \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Toàn bộ tín hiệu vào được vẽ ở đồ thị trên cùng của hình~\ref{fig:toanbo}, và kịch bản SK1 được phóng to ở hình~\ref{fig:sk1chain}. Kịch bản SK4 có công suất lớn gấp khoảng 15 lần SK1, nhưng tác động đồng đều lên hai phần tử.
+
+
+\subsection{Mô hình nhiễu}
+
+Để kiểm tra mạch lọc, một nguồn nhiễu được mắc nối tiếp vào đường tín hiệu ra của cảm biến (giữa chân S và đầu vào mạch khuếch đại). Nó mô phỏng nhiễu điện từ thu được trên dây nối:
+\begin{equation}
+  v_n(t) = A_{50}\sin(2\pi\cdot 50\,t) + A_{HF}\sin(2\pi\cdot 1000\,t) + 2A_{WN}\,w(2000\,t),
+  \label{eq:noise}
+\end{equation}
+với $A_{50} = 50$~µV (nhiễu điện lưới), $A_{HF} = 50$~µV (nhiễu tần số cao), $A_{WN} = 10$~µV. Hàm $w(\cdot)$ là hàm nhiễu trắng \texttt{white()} của LTspice, cho giá trị ngẫu nhiên trong khoảng $\pm 0{,}5$ với băng thông khoảng 1~kHz. Tổng biên độ nhiễu khoảng 0,2~mV$_\text{pp}$, cùng bậc với tín hiệu hữu ích. Đây đúng là loại ``nhiễu tần số cao, biên độ nhỏ'' mà đề bài yêu cầu mạch lọc phải loại bỏ.

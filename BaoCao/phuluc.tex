@@ -1,0 +1,54 @@
+% =====================================================================
+\chapter{CÁC LỆNH MÔ PHỎNG LTSPICE}
+\label{app:ltspice}
+% =====================================================================
+
+Phụ lục này liệt kê các khối lệnh SPICE đặt trên sơ đồ \texttt{PIR\_LHI778.asc}. Chúng định nghĩa thông số mô hình cảm biến, tín hiệu vào, nhiễu và các phép đo.
+
+\section{Thông số mô hình \LHI{}}
+{\small
+\begin{verbatim}
+.param AEL=2e-6    ; dien tich 1 phan tu 2x1 mm2 [m2]
+.param DEL=50e-6   ; be day phan tu gom nhiet dien [m]
+.param EPSR=200    ; hang so dien moi tuong doi cua gom PZT
+.param CV=2.6e6    ; nhiet dung rieng the tich [J/(m3.K)]
+.param PPY=3.7e-4  ; he so nhiet dien p [C/(m2.K)]
+.param ETA=0.75    ; he so hap thu x truyen qua cua so loc IR
+.param TAUT=0.6    ; hang so thoi gian nhiet tau_T = H/G [s]
+.param MISM=0.01   ; do lech 2 phan tu (Match) = 1 %
+.param HTH={CV*AEL*DEL}              ; nhiet dung H [J/K]
+.param GTH={HTH/TAUT}                ; do dan nhiet G [W/K]
+.param CE={EPSR*8.854e-12*AEL/DEL}   ; dien dung 1 phan tu [F]
+.model JLHI NJF(Vto=-1.0 Beta=4.5e-4 Lambda=0.02 Cgs=2p Cgd=1p Is=1e-15)
+\end{verbatim}
+}
+
+\section{Tín hiệu vào (kịch bản chuyển động)}
+{\small
+\begin{verbatim}
+.func gp(x,c,w)    {exp(-(x-c)*(x-c)/(w*w))}
+.func sstep(x,c,d) {0.5*(1+tanh(2*(x-c)/d))}
+.func walk(x,s,T,w,n) {gp(x,s,w)+if(n>1,gp(x,s+T,w),0)
+                       +if(n>2,gp(x,s+2*T,w),0)+if(n>3,gp(x,s+3*T,w),0)}
+.param P1=0.13 T1=0.8 W1=0.15 S1=3   ; SK1: nguoi di binh thuong
+.param P2=0.35 T2=0.5 W2=0.09 S2=10  ; SK2: nguoi di nhanh / o gan
+.param P3=0.04 T3=1.4 W3=0.25 S3=15  ; SK3: nguoi di cham / o xa
+.param P4=2 S4=22 END4=26 RT4=1      ; SK4: buc xa nen tang deu
+.param P5=0.12 S5=31 RT5=0.3         ; SK5: vat nong dung yen
+.func IRA(x) {P1*walk(x,S1,T1,W1,4)+P2*walk(x,S2,T2,W2,4)
+             +P3*walk(x,S3,T3,W3,3)
+             +P4*(sstep(x,S4,RT4)-sstep(x,END4,RT4))+P5*sstep(x,S5,RT5)}
+.func IRB(x) {P1*walk(x,S1+T1/2,T1,W1,4)+P2*walk(x,S2+T2/2,T2,W2,4)
+             +P3*walk(x,S3+T3/2,T3,W3,3)
+             +P4*(sstep(x,S4,RT4)-sstep(x,END4,RT4))}
+\end{verbatim}
+}
+
+\section{Cách chạy mô phỏng}
+\begin{enumerate}
+  \item Mở file \texttt{MoPhong\_LTspice/PIR\_LHI778.asc} bằng LTspice (bản 24 trở lên).
+  \item Chọn \textbf{Simulate $\to$ Run}. Sau khoảng 15 -- 30~s, cửa sổ đồ thị tự hiện bốn ô: $V(pa), V(pb)$; $V(s)$; $V(a2), V(a3)$; $V(out)$.
+  \item Xem kết quả đo tự động ở \textbf{View $\to$ SPICE Error Log}.
+  \item Để chạy phân tích tần số: đổi dòng \texttt{.tran} thành Comment và dòng \texttt{.ac} thành SPICE directive (chuột phải vào dòng lệnh), rồi chạy lại.
+  \item Để tạo kịch bản chuyển động mới: sửa các tham số \texttt{P}, \texttt{T}, \texttt{W}, \texttt{S} trong khối \emph{KICH BAN CHUYEN DONG}. Hướng dẫn chi tiết có trong file \texttt{HUONG\_DAN\_MO\_PHONG.md}.
+\end{enumerate}

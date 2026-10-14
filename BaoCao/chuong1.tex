@@ -1,0 +1,280 @@
+% =====================================================================
+\chapter{TỔNG QUAN}
+\label{chap:tongquan}
+% =====================================================================
+
+\section{Đặt vấn đề}
+
+Phát hiện sự có mặt và chuyển động của con người là một bài toán đo lường rất phổ biến. Nó xuất hiện trong nhiều ứng dụng hằng ngày:
+\begin{itemize}
+  \item bật/tắt đèn tự động ở hành lang, cầu thang, nhà vệ sinh;
+  \item hệ thống báo động chống đột nhập;
+  \item điều khiển điều hòa, thông gió theo sự có mặt của người để tiết kiệm năng lượng;
+  \item cửa tự động, camera chỉ ghi hình khi có chuyển động, thiết bị nhà thông minh.
+\end{itemize}
+
+Trong các ứng dụng này, cảm biến phải chạy liên tục nhiều năm, thường bằng pin, và phải rẻ. Nó chỉ cần trả lời câu hỏi ``có người đang di chuyển trong vùng quan sát hay không'', không cần nhận dạng. Cảm biến hồng ngoại thụ động PIR đáp ứng rất tốt các yêu cầu này, nên đây là loại cảm biến phát hiện chuyển động được dùng nhiều nhất.
+
+Đầu thu PIR bản chất là một \emph{cảm biến nhiệt}: nó biến sự thay đổi của công suất bức xạ hồng ngoại chiếu tới thành một tín hiệu điện. Tín hiệu này rất nhỏ và chậm, nên một hệ thống PIR hoàn chỉnh luôn gồm hai phần: \emph{đầu thu} và \emph{mạch chuẩn hóa tín hiệu} (khuếch đại, lọc, dịch mức). Đề tài này tập trung vào cả hai phần: hiểu nguyên lý đo của đầu thu \LHI{} và thiết kế mạch chuẩn hóa tín hiệu cho nó.
+
+\section{Các phương pháp phát hiện chuyển động}
+
+Có nhiều nguyên lý vật lý có thể dùng để phát hiện chuyển động của người. Bảng~\ref{tab:sosanh} so sánh các phương pháp thường gặp.
+
+\begin{table}[!htb]
+\centering
+\caption{So sánh các phương pháp phát hiện chuyển động}
+\label{tab:sosanh}
+\small
+\begin{tabularx}{\textwidth}{@{}p{2.6cm}LLL@{}}
+\toprule
+\textbf{Phương pháp} & \textbf{Nguyên lý} & \textbf{Ưu điểm} & \textbf{Nhược điểm} \\ \midrule
+Hồng ngoại thụ động (PIR) & Thu bức xạ nhiệt của người, chỉ phản ứng khi bức xạ thay đổi & Rẻ, công suất rất thấp (µW -- mW), không phát xạ & Không phát hiện người đứng yên; nhạy với nguồn nhiệt thay đổi nhanh \\
+Radar vi ba (Doppler) & Phát sóng vi ba, đo độ lệch tần số của sóng phản xạ & Xuyên qua vách mỏng, không phụ thuộc nhiệt độ & Tốn năng lượng hơn, dễ báo nhầm do vật chuyển động phía sau vách \\
+Siêu âm & Phát sóng siêu âm, đo thời gian / Doppler của sóng phản xạ & Đo được khoảng cách & Bị ảnh hưởng bởi luồng gió, rèm; tầm ngắn \\
+Hồng ngoại chủ động & Phát chùm IR, phát hiện khi chùm bị chắn & Đơn giản, chính xác theo đường thẳng & Chỉ bảo vệ một đường, cần bộ phát \\
+Camera + xử lý ảnh & So sánh các khung hình & Nhận dạng được đối tượng & Đắt, tốn năng lượng, vấn đề riêng tư \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Với yêu cầu rẻ, đơn giản và tiết kiệm năng lượng, PIR là lựa chọn phù hợp nhất. Nhược điểm ``không thấy người đứng yên'' là hệ quả trực tiếp của nguyên lý nhiệt điện, sẽ được phân tích và mô phỏng ở Chương~\ref{chap:nguyenly}.
+
+\section{Bức xạ hồng ngoại của cơ thể người}
+\label{sec:bucxa}
+
+\subsection{Các định luật bức xạ nhiệt}
+
+Mọi vật có nhiệt độ trên 0~K đều phát ra bức xạ điện từ. Với vật đen tuyệt đối, mật độ công suất phát xạ theo bước sóng được cho bởi \emph{định luật Planck}:
+\begin{equation}
+  M_\lambda(\lambda,T) = \frac{C_1}{\lambda^5}\,\frac{1}{\exp\!\left(\dfrac{C_2}{\lambda T}\right)-1},
+  \label{eq:planck}
+\end{equation}
+trong đó $C_1 = 2\pi h c^2 = \num{3.742e8}$~W·µm$^4$/m$^2$, $C_2 = hc/k = \num{14388}$~µm·K, $\lambda$ tính bằng µm và $M_\lambda$ tính bằng W/(m$^2$·µm).
+
+Bước sóng tại đó bức xạ mạnh nhất được cho bởi \emph{định luật Wien}:
+\begin{equation}
+  \lambda_{\max} = \frac{2898~\text{µm·K}}{T}.
+  \label{eq:wien}
+\end{equation}
+Với nhiệt độ bề mặt da người khoảng $T_h \approx 305$~K (32~°C), $\lambda_{\max} \approx 9{,}5$~µm. Như vậy bức xạ của người nằm chủ yếu trong vùng hồng ngoại xa 7 -- 14~µm.
+
+Tổng công suất phát xạ trên một đơn vị diện tích được cho bởi \emph{định luật Stefan -- Boltzmann}:
+\begin{equation}
+  M = \varepsilon\,\sigma\,T^4,\qquad \sigma = \num{5.67e-8}~\text{W/(m}^2\text{·K}^4).
+  \label{eq:stefan}
+\end{equation}
+Da người có độ phát xạ $\varepsilon \approx 0{,}98$, gần như vật đen.
+
+\subsection{Chênh lệch bức xạ giữa người và nền}
+
+Cảm biến PIR không đo bức xạ tuyệt đối, mà đo \emph{sự chênh lệch} giữa bức xạ của người và của nền (tường, sàn) phía sau. Với nền ở $T_b = 298$~K (25~°C) và da người ở $T_h = 305$~K:
+\begin{align}
+  M_h &= \sigma T_h^4 = \num{5.67e-8}\times 305^4 \approx 491~\text{W/m}^2, \nonumber\\
+  M_b &= \sigma T_b^4 = \num{5.67e-8}\times 298^4 \approx 447~\text{W/m}^2, \nonumber\\
+  \Delta M &= M_h - M_b \approx 44~\text{W/m}^2 .
+  \label{eq:deltaM}
+\end{align}
+Chênh lệch này chỉ bằng khoảng 10\% bức xạ nền. Khoảng một nửa của $\Delta M$ nằm trong dải truyền qua của cửa sổ lọc 5,5 -- 14~µm của cảm biến. Hình~\ref{fig:planck} minh họa phổ bức xạ của người, của nền và dải truyền qua của cửa sổ lọc.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.92\textwidth,height=6.6cm,xmin=2,xmax=25,ymin=0,ymax=36,
+  xlabel={Bước sóng $\lambda$ [µm]},ylabel={$M_\lambda$ [W/(m$^2$·µm)]},
+  legend pos=north east, declare function={
+    pl(\l,\T)=3.742e8/(\l^5*(exp(14388/(\l*\T))-1));}]
+  \fill[c3!12] (axis cs:5.5,0) rectangle (axis cs:14,36);
+  \node[c3!60!black,font=\footnotesize,align=center] at (axis cs:9.75,4) {dải truyền qua\\cửa sổ lọc 5,5 -- 14 µm};
+  \addplot[c2,very thick,domain=2:25,samples=200] {pl(x,305)};
+  \addlegendentry{Người, $T_h=305$ K}
+  \addplot[c1,very thick,dashed,domain=2:25,samples=200] {pl(x,298)};
+  \addlegendentry{Nền, $T_b=298$ K}
+  \addplot[c4,thick,domain=2:25,samples=200] {10*(pl(x,305)-pl(x,298))};
+  \addlegendentry{Chênh lệch $\times 10$}
+  \draw[densely dotted] (axis cs:9.5,0) -- (axis cs:9.5,32) node[above,font=\footnotesize] {$\lambda_{\max}\approx 9{,}5$ µm};
+\end{axis}
+\end{tikzpicture}
+\caption{Phổ bức xạ vật đen của người (305~K), của nền (298~K) và vùng làm việc của cửa sổ lọc}
+\label{fig:planck}
+\end{figure}
+
+\subsection{Ước lượng công suất bức xạ tới phần tử cảm biến}
+\label{sec:uocluongP}
+
+Cảm biến PIR luôn dùng kèm \emph{thấu kính Fresnel}. Thấu kính chia không gian thành nhiều vùng quan sát, mỗi vùng hội tụ bức xạ lên phần tử cảm biến. Với một vật nóng lấp đầy vùng nhìn của phần tử, công suất bức xạ chênh lệch tới phần tử có thể ước lượng bằng:
+\begin{equation}
+  \Delta P \approx \frac{\Delta M_\text{band}}{\pi}\;\tau_L\;A_L\;\frac{A}{f_L^2}\;k_F,
+  \label{eq:deltaP}
+\end{equation}
+trong đó $\Delta M_\text{band}$ là chênh lệch bức xạ trong dải lọc, $\tau_L$ là hệ số truyền qua của thấu kính, $A_L$ là diện tích một phân đoạn thấu kính, $A$ là diện tích phần tử, $f_L$ là tiêu cự và $k_F \le 1$ là hệ số lấp đầy (người chỉ chiếm một phần vùng nhìn).
+
+Lấy ví dụ $\Delta M_\text{band} \approx 21$~W/m$^2$, $\tau_L = 0{,}5$, $A_L = 1$~cm$^2$, $A = 2$~mm$^2$, $f_L = 20$~mm, ta được $\Delta P \approx 1{,}7\,k_F$~µW. Trong thực tế, quần áo làm giảm nhiệt độ bề mặt và người thường không lấp đầy vùng nhìn, nên:
+\begin{equation*}
+  \boxed{\Delta P \approx 0{,}05 \text{ -- } 1~\text{µW}}
+\end{equation*}
+Đây là bậc độ lớn của tín hiệu vào mà mạch phải xử lý. Với độ nhạy của \LHI{} khoảng 4~kV/W (mục~\ref{sec:chonsensor}), điện áp ra của cảm biến chỉ vào cỡ \emph{vài trăm µV đến vài mV}. Con số này phù hợp với tài liệu \cite{st-an4368}, trong đó tín hiệu PIR điển hình được nêu là khoảng 1~mV đỉnh -- đỉnh.
+
+\subsection{Tần số của tín hiệu chuyển động}
+\label{sec:tanso}
+
+Khi người đi ngang qua vùng quan sát, ảnh của người lướt qua các phần tử cảm biến. Gọi $v$ là vận tốc người, $D$ là khoảng cách tới cảm biến, $a$ là khoảng cách giữa tâm hai phần tử ($a = 2$~mm với \LHI{}). Thời gian để ảnh đi từ phần tử này sang phần tử kia là:
+\begin{equation}
+  \Delta t = \frac{a/f_L}{v/D} = \frac{a\,D}{f_L\,v}.
+  \label{eq:deltat}
+\end{equation}
+Mỗi lần đi qua hai phần tử tạo ra một chu kỳ tín hiệu, nên tần số tín hiệu vào khoảng:
+\begin{equation}
+  f_s \approx \frac{1}{2\,\Delta t} = \frac{f_L\,v}{2\,a\,D}.
+  \label{eq:fs}
+\end{equation}
+Với $f_L = 20$~mm:
+\begin{itemize}
+  \item người đi bình thường, $v = 1$~m/s, $D = 3$~m: $\Delta t = 0{,}3$~s, $f_s \approx 1{,}7$~Hz;
+  \item người đi chậm ở xa, $v = 0{,}3$~m/s, $D = 10$~m: $f_s \approx 0{,}15$~Hz;
+  \item người đi nhanh ở gần, $v = 2$~m/s, $D = 1{,}5$~m: $f_s \approx 6{,}7$~Hz.
+\end{itemize}
+Như vậy, tín hiệu chuyển động của người nằm trong dải khoảng \textbf{0,1 -- 10~Hz}. Các nhà sản xuất cũng đo nhiễu của cảm biến trong dải 0,3 -- 10~Hz hoặc 0,4 -- 10~Hz \cite{lhi778-ds,pyd1378}. Mọi thành phần nằm ngoài dải này (điện một chiều, trôi nhiệt rất chậm, nhiễu 50~Hz, nhiễu tần số cao) đều là nhiễu cần loại bỏ.
+
+\section{Các loại đầu thu hồng ngoại nhiệt}
+
+Có ba loại đầu thu nhiệt chính cho vùng hồng ngoại xa \cite{fraden}: pin nhiệt điện (thermopile, đo nhiệt độ qua sức điện động Seebeck), bolometer (đo nhiệt độ qua điện trở) và đầu thu nhiệt điện (pyroelectric). Hai loại đầu đáp ứng với bức xạ không đổi nên phù hợp để đo nhiệt độ. Đầu thu nhiệt điện chỉ phản ứng với \emph{sự thay đổi} nhiệt độ. Với bài toán đo nhiệt độ thì đây là nhược điểm. Nhưng với bài toán phát hiện chuyển động thì đây lại là ưu điểm: cảm biến tự bỏ qua các nguồn nhiệt đứng yên như tường, lò sưởi, đồ đạc, và chỉ nhạy với vật nóng đang di chuyển. Nhờ FET tích hợp, độ nhạy của nó còn đạt tới vài kV/W, cao hơn pin nhiệt điện hàng chục lần.
+
+\section{Lựa chọn cảm biến}
+\label{sec:chonsensor}
+
+\subsection{Họ cảm biến LHi của PerkinElmer / Excelitas}
+
+\LHI{} là đầu thu nhiệt điện hai phần tử (dual element) do hãng PerkinElmer sản xuất. Mảng cảm biến này sau đó chuyển sang Excelitas Technologies. Họ sản phẩm gồm \cite{lhi778-ds,lhi-family,pyd1378}:
+\begin{itemize}
+  \item \textbf{\LHI{}}: bản giá thấp, vỏ TO-5, cửa sổ nhỏ, trường nhìn 139° (theo datasheet 2001) hoặc 71° không bị che;
+  \item \textbf{LHi 878} và \textbf{PYD 1388}: cùng thông số điện, cửa sổ lớn hơn (trường nhìn 95°), có bản chống nhiễu điện từ tốt hơn;
+  \item \textbf{LHi 968} (nay là PYD 1398): bản cao cấp cho báo động chống trộm, chống nhiễu ánh sáng trắng;
+  \item \textbf{PYD 1378}: mã thay thế chính thức cho \LHI{} trong danh mục sản phẩm hiện nay của Excelitas.
+\end{itemize}
+
+\subsection{Thông số kỹ thuật của \LHI{}}
+
+Bảng~\ref{tab:lhi778} tổng hợp thông số từ datasheet \LHI{} \cite{lhi778-ds}, bảng thông số họ sản phẩm \cite{lhi-family} và datasheet của mã thay thế PYD 1378 \cite{pyd1378}.
+
+\begin{table}[!htb]
+\centering
+\caption{Thông số kỹ thuật của cảm biến \LHI{}}
+\label{tab:lhi778}
+\small
+\begin{tabularx}{\textwidth}{@{}p{4.2cm}ccc>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Thông số} & \textbf{Min} & \textbf{Điển hình} & \textbf{Max} & \textbf{Điều kiện} \\ \midrule
+Kích thước phần tử & \multicolumn{3}{c}{2 phần tử, mỗi phần tử $2\times1$~mm$^2$} & khoảng cách 1~mm \\
+Cấu hình phần tử & \multicolumn{3}{c}{nối tiếp ngược cực (series opposed)} & \\
+Độ nhạy $R_V$ & 3,3~kV/W & 4,0 -- 4,2~kV/W & & 1~Hz, vật đen 100~°C \\
+Độ lệch hai phần tử (match) & & 1\% & 10\% & \\
+Nhiễu & & 20~µV$_\text{pp}$ & 50~µV$_\text{pp}$ & 0,3 (0,4) -- 10~Hz, 25~°C \\
+Điện áp offset $V_S$ & 0,2~V & & 1,55~V & $R_S = 47$~kΩ \\
+Trở kháng ra & & 5~kΩ & 10~kΩ & tải 47~kΩ \\
+Điện áp làm việc $V_{DD}$ & 2~V & & 15~V (12~V) & $R_S = 47$~kΩ \\
+Dải phổ cửa sổ lọc & \multicolumn{3}{c}{5,5 -- 14~µm, truyền qua $\ge 77$\%} & 7,5 -- 13,5~µm \\
+NEP & & $\num{7.5e-10}$ & $\num{28e-10}$ & W/$\sqrt{\text{Hz}}$ \\
+Nhiệt độ làm việc & $-40$~°C & & 85~°C & \\
+Vỏ & \multicolumn{3}{c}{TO-5, 3 chân: D, S, G (vỏ)} & \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Lý do chọn \LHI{}}
+
+\begin{itemize}
+  \item Là đầu thu \emph{hai phần tử}: tự triệt tiêu các thay đổi nhiệt độ chung của môi trường và nhiễu ánh sáng, chỉ phản ứng với vật di chuyển.
+  \item Tích hợp sẵn FET lặp nguồn: đầu ra có trở kháng khoảng 5~kΩ, nối trực tiếp được vào op-amp.
+  \item Dải điện áp làm việc 2 -- 15~V, nên chạy tốt với nguồn 3,3~V của đề bài.
+  \item Độ nhạy cao (4~kV/W), nhiễu thấp (20~µV$_\text{pp}$), giá thấp, vỏ TO-5 tiêu chuẩn, có datasheet đầy đủ và có mã thay thế đang sản xuất (PYD 1378).
+\end{itemize}
+
+\section{Yêu cầu thiết kế}
+\label{sec:yeucau}
+
+Yêu cầu của đề tài được tóm tắt trong bảng~\ref{tab:yeucau}.
+
+\begin{table}[!htb]
+\centering
+\caption{Yêu cầu thiết kế}
+\label{tab:yeucau}
+\small
+\begin{tabularx}{\textwidth}{@{}p{4.5cm}L@{}}
+\toprule
+\textbf{Hạng mục} & \textbf{Yêu cầu} \\ \midrule
+Cảm biến & \LHI{} (đầu thu + các chân ra D, S, G) \\
+Tín hiệu vào & Mô phỏng tín hiệu chuyển động thực tế tác động lên cảm biến \\
+Mạch khuếch đại & Dùng op-amp để khuếch đại tín hiệu ra của \LHI{} \\
+Mạch lọc & Lọc thông thấp dùng op-amp, loại nhiễu tần số cao biên độ nhỏ \\
+Nguồn cấp & Nguồn đơn 3,3~V \\
+Tín hiệu ra & Tương tự, trong khoảng 0 -- 3~V \\
+Khi không có chuyển động & Đầu ra giữ ổn định ở 1,5~V \\
+Khi có chuyển động & Đầu ra thay đổi tương ứng với tín hiệu chuyển động, trong khoảng 0 -- 3~V \\
+Công cụ & Mô phỏng toàn bộ trong một project LTspice duy nhất \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Từ các phân tích ở mục~\ref{sec:bucxa}, có thể suy ra các yêu cầu kỹ thuật cho mạch chuẩn hóa tín hiệu:
+\begin{itemize}
+  \item Tín hiệu vào: khoảng 0,3 -- 2~mV$_\text{pp}$, nằm chồng lên điện áp một chiều 0,2 -- 1,55~V.
+  \item Tín hiệu ra: dao động quanh 1,5~V, tối đa $\pm 1{,}5$~V.
+  \item Hệ số khuếch đại cần có: $K \approx \dfrac{1{,}5~\text{V}}{1~\text{mV}} \approx 1500$ (khoảng 63~dB).
+  \item Dải thông: khoảng 0,5 -- 10~Hz. Phải chặn hoàn toàn thành phần một chiều (nếu không, 0,8~V một chiều nhân 1500 lần sẽ làm bão hòa mạch) và lọc nhiễu 50~Hz.
+\end{itemize}
+
+\section{Sơ đồ khối của hệ thống}
+
+Hình~\ref{fig:sodokhoi} trình bày sơ đồ khối của hệ thống được thiết kế và mô phỏng trong đề tài.
+
+\begin{figure}[!htb]
+\centering
+\begin{tikzpicture}[font=\small,scale=0.93,transform shape,
+  blk/.style={draw,thick,rounded corners=2pt,align=center,minimum height=1.25cm,fill=#1!8},
+  blk/.default=c1, ar/.style={-{Stealth[length=2.2mm]},thick}]
+  \node[blk=c2,text width=1.6cm] (ng) {Người\\chuyển động};
+  \node[blk=c2,text width=1.6cm,right=0.45cm of ng] (tk) {Thấu kính Fresnel};
+  \node[blk=c3,text width=2.0cm,right=0.45cm of tk] (cb) {Cảm biến \LHI{}\\(chân S)};
+  \node[blk,text width=1.9cm,right=0.45cm of cb] (kd) {Khuếch đại 2 tầng\\+ lọc thông cao};
+  \node[blk,text width=1.55cm,right=0.45cm of kd] (lc) {Lọc thông thấp Sallen-Key};
+  \node[blk,text width=1.3cm,right=0.45cm of lc] (ca) {Chia áp\\0 -- 3~V};
+  \draw[ar] (ng) -- node[above,font=\scriptsize]{IR} (tk);
+  \draw[ar] (tk) -- node[above,font=\scriptsize]{$P_A,P_B$} (cb);
+  \draw[ar] (cb) -- node[above,font=\scriptsize]{mV} (kd);
+  \draw[ar] (kd) -- (lc);
+  \draw[ar] (lc) -- (ca);
+  \draw[ar] (ca.east) -- ++(0.55,0) node[right,align=left]{OUT\\→ ADC};
+  \node[blk=cgray,text width=4.6cm,below=0.8cm of kd.south east,anchor=north] (ref) {Nguồn 3,3~V và điện áp tham chiếu $\VREF = 1{,}65$~V};
+  \draw[ar,dashed] (ref.north) -- ++(0,0.3) -| (kd.south);
+  \draw[ar,dashed] (ref.north) -- ++(0,0.3) -| (lc.south);
+  \draw[ar,dashed] (ref.west) -| (cb.south);
+  \begin{scope}[on background layer]
+    \node[draw=c2,dashed,rounded corners,fit=(ng)(tk),inner sep=5pt,label={[font=\scriptsize,c2]above:Tín hiệu vào (mô phỏng)}] {};
+    \node[draw=c1,dashed,rounded corners,fit=(kd)(lc)(ca),inner sep=5pt,label={[font=\scriptsize,c1]above:Mạch chuẩn hóa tín hiệu}] {};
+  \end{scope}
+\end{tikzpicture}
+\caption{Sơ đồ khối hệ thống phát hiện chuyển động PIR}
+\label{fig:sodokhoi}
+\end{figure}
+
+Nhiệm vụ của từng khối như sau:
+\begin{enumerate}
+  \item \textbf{Tín hiệu vào}: mô phỏng công suất bức xạ hồng ngoại $P_A(t)$, $P_B(t)$ chiếu lên hai phần tử khi người di chuyển qua các vùng của thấu kính.
+  \item \textbf{Cảm biến \LHI{}}: biến sự thay đổi bức xạ thành điện áp ở chân S (vài mV, chồng lên khoảng 0,8~V một chiều).
+  \item \textbf{Khuếch đại}: hai tầng op-amp không đảo. Chúng khuếch đại khoảng 1600 lần, chặn thành phần một chiều và dịch mức tín hiệu về quanh $\VREF$.
+  \item \textbf{Lọc thông thấp}: bộ lọc Sallen-Key bậc 2 loại nhiễu tần số cao (50~Hz, 1~kHz, nhiễu trắng).
+  \item \textbf{Chia áp đầu ra}: đưa dải 0 -- 3,3~V của op-amp về 0 -- 3,0~V, để mức nghỉ đúng bằng 1,5~V.
+  \item \textbf{Nguồn và tham chiếu}: nguồn 3,3~V và điện áp tham chiếu 1,65~V dùng làm ``đất ảo'' cho tín hiệu xoay chiều.
+\end{enumerate}
+
+\section{Công cụ thực hiện và bố cục báo cáo}
+
+Toàn bộ hệ thống được mô phỏng trên phần mềm \textbf{LTspice 26.1} của Analog Devices \cite{ltspice}. Cảm biến \LHI{} không có mô hình SPICE do nhà sản xuất cung cấp. Vì vậy em tự xây dựng mô hình vật lý của cảm biến và hiệu chỉnh nó theo các thông số của datasheet (mục~\ref{sec:mohinh}). Op-amp dùng mô hình AD8608 có sẵn trong thư viện LTspice.
+
+Phần còn lại của báo cáo gồm:
+\begin{itemize}
+  \item \textbf{Chương 2}: nguyên lý đo của đầu thu nhiệt điện, cấu tạo cảm biến \LHI{}, mô hình mô phỏng, tín hiệu vào, thiết kế và tính toán mạch chuẩn hóa tín hiệu, kết quả mô phỏng.
+  \item \textbf{Chương 3}: tổng kết kết quả, hạn chế và hướng phát triển.
+  \item \textbf{Phụ lục}: thông số mô hình và các lệnh mô phỏng LTspice.
+\end{itemize}
