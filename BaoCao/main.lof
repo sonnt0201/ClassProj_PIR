@@ -6,15 +6,15 @@
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {2.1}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Hiệu ứng nhiệt điện: khi nhiệt độ thay đổi, điện tích trên hai điện cực thay đổi và tạo ra dòng điện ở mạch ngoài}}{8}{figure.caption.11}%
 \contentsline {figure}{\numberline {2.2}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Mạch tương đương nhiệt -- điện của đầu thu nhiệt điện}}{10}{figure.caption.13}%
-\contentsline {figure}{\numberline {2.3}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Cấu tạo cơ khí và sơ đồ chân của LHi~778{} (vẽ lại theo \cite {lhi778-ds,pyd1378})}}{12}{figure.caption.15}%
-\contentsline {figure}{\numberline {2.4}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Mạch điện bên trong LHi~778{} và mạch ngoài}}{13}{figure.caption.16}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Cấu tạo cơ khí và sơ đồ chân của PYD~1378{} (vẽ lại theo \cite {pyd1378-ds,pyd1378})}}{12}{figure.caption.15}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Mạch điện bên trong PYD~1378{} và mạch ngoài}}{13}{figure.caption.16}%
 \contentsline {figure}{\numberline {2.5}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Thấu kính Fresnel chia vùng nhìn thành các dải A, B xen kẽ; người đi ngang lần lượt cắt qua các dải}}{14}{figure.caption.17}%
-\contentsline {figure}{\numberline {2.6}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Độ nhạy của mô hình LHi~778{} theo tần số so với datasheet}}{18}{figure.caption.20}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Độ nhạy của mô hình PYD~1378{} theo tần số so với datasheet}}{18}{figure.caption.20}%
 \contentsline {figure}{\numberline {2.7}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Mạch tạo điện áp tham chiếu $V_\mathrm {REF}$ (đất ảo)}}{23}{figure.caption.28}%
 \contentsline {figure}{\numberline {2.8}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Tầng khuếch đại thứ nhất: khuếch đại không đảo có lọc thông dải}}{23}{figure.caption.29}%
 \contentsline {figure}{\numberline {2.9}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Mạch ghép xoay chiều $C_3$ -- $R_3$ và tầng khuếch đại thứ hai}}{25}{figure.caption.35}%
 \contentsline {figure}{\numberline {2.10}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Bộ lọc thông thấp Sallen-Key bậc 2 (U1C) và mạch chia áp đầu ra $R_8$ -- $R_9$}}{26}{figure.caption.38}%
-\contentsline {figure}{\numberline {2.11}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Sơ đồ nguyên lý toàn hệ thống trong file LTspice \texttt {PIR\_LHI778.asc} (vẽ lại từ file mô phỏng)}}{30}{figure.caption.45}%
+\contentsline {figure}{\numberline {2.11}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Sơ đồ nguyên lý toàn hệ thống trong file LTspice \texttt {PIR\_PYD1378.asc} (vẽ lại từ file mô phỏng)}}{30}{figure.caption.45}%
 \contentsline {figure}{\numberline {2.12}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Đáp ứng tần số của các tầng và của toàn mạch chuẩn hóa (mô phỏng AC)}}{31}{figure.caption.47}%
 \contentsline {figure}{\numberline {2.13}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Kịch bản SK1: công suất tới, nhiệt độ phần tử, dòng nhiệt điện và điện áp chân S ($\mitDelta V_S = V_S - V_{S0}$, $V_{S0} = 0{,}8095$~V)}}{32}{figure.caption.49}%
 \contentsline {figure}{\numberline {2.14}{\ignorespaces \xpg@aux {}{vietnamese}\ignorespaces Kịch bản SK2: tín hiệu tại chân S và sau từng tầng của mạch}}{33}{figure.caption.50}%

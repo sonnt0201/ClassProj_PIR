@@ -5,7 +5,7 @@
 
 \subsection{Thiết lập mô phỏng}
 
-Toàn bộ hệ thống nằm trong một file LTspice duy nhất \texttt{PIR\_LHI778.asc}: tín hiệu vào, mô hình \LHI{}, nguồn nhiễu, mạch khuếch đại -- lọc và nguồn tham chiếu (hình~\ref{fig:ltspice}). Mô phỏng dùng LTspice 26.1.1 với:
+Toàn bộ hệ thống nằm trong một file LTspice duy nhất \texttt{PIR\_PYD1378.asc}: tín hiệu vào, mô hình \PYD{}, nguồn nhiễu, mạch khuếch đại -- lọc và nguồn tham chiếu (hình~\ref{fig:ltspice}). Mô phỏng dùng LTspice 26.1.1 với:
 \begin{itemize}
   \item phân tích quá độ \texttt{.tran 0 40 0 0.1m} (40~s, bước tối đa 0,1~ms, đủ để biểu diễn nhiễu 1~kHz; chạy khoảng 15 -- 30~s);
   \item phân tích tần số \texttt{.ac dec 100 0.01 1k} với nguồn thử 1~µW trên phần tử A;
@@ -17,7 +17,7 @@ Toàn bộ hệ thống nằm trong một file LTspice duy nhất \texttt{PIR\_L
 \centering
 \begin{subfigure}{\linewidth}\centering
 \input{hinh/ltspice_cb.tex}
-\caption{Tín hiệu vào, mô hình nhiệt, mô hình \LHI{} (khung nét đứt), $R_S$ và nguồn nhiễu BN}
+\caption{Tín hiệu vào, mô hình nhiệt, mô hình \PYD{} (khung nét đứt), $R_S$ và nguồn nhiễu BN}
 \end{subfigure}
 
 \vspace{0.3cm}
@@ -31,7 +31,7 @@ Toàn bộ hệ thống nằm trong một file LTspice duy nhất \texttt{PIR\_L
 \input{hinh/ltspice_vref.tex}
 \caption{Nguồn 3,3~V và mạch tạo $\VREF$ (U1D)}
 \end{subfigure}
-\caption{Sơ đồ nguyên lý toàn hệ thống trong file LTspice \texttt{PIR\_LHI778.asc} (vẽ lại từ file mô phỏng)}
+\caption{Sơ đồ nguyên lý toàn hệ thống trong file LTspice \texttt{PIR\_PYD1378.asc} (vẽ lại từ file mô phỏng)}
 \label{fig:ltspice}
 \end{figure}
 \end{landscape}
@@ -111,7 +111,7 @@ Các kết quả mô phỏng khớp với tính toán ở mục~\ref{sec:thietke
 \subsection{Tín hiệu bên trong cảm biến}
 \label{sec:kq-cambien}
 
-Hình~\ref{fig:sk1chain} theo dõi tín hiệu qua từng bước biến đổi bên trong \LHI{} ở kịch bản SK1 (người đi bình thường). Hình này minh họa trực tiếp nguyên lý đo ở mục~\ref{sec:hieuung} -- \ref{sec:cautao}.
+Hình~\ref{fig:sk1chain} theo dõi tín hiệu qua từng bước biến đổi bên trong \PYD{} ở kịch bản SK1 (người đi bình thường). Hình này minh họa trực tiếp nguyên lý đo ở mục~\ref{sec:hieuung} -- \ref{sec:cautao}.
 
 \begin{figure}[!htb]
 \centering
@@ -357,14 +357,14 @@ Phân tích kết quả:
 \begin{tabularx}{\textwidth}{@{}p{4.3cm}p{3.4cm}Lc@{}}
 \toprule
 \textbf{Yêu cầu} & \textbf{Mục tiêu} & \textbf{Kết quả mô phỏng} & \textbf{Đạt} \\ \midrule
-Mô phỏng đầu thu \LHI{} và các chân ra & Đúng nguyên lý, khớp datasheet & Độ nhạy 4,06~kV/W @1~Hz, $V_S = 0{,}81$~V, $r_\text{out} = 5{,}1$~kΩ & Đạt \\
+Mô phỏng đầu thu \PYD{} và các chân ra & Đúng nguyên lý, khớp datasheet & Độ nhạy 4,06~kV/W @1~Hz, $V_S = 0{,}81$~V, $r_\text{out} = 5{,}1$~kΩ & Đạt \\
 Đáp ứng đúng nguyên lý cảm biến & Chỉ đáp ứng với thay đổi, vi sai & Nền đổi đều: $\pm35$~mV; vật đứng yên: trở về 1,5~V & Đạt \\
 Nguồn cấp & 3,3~V đơn & Toàn mạch dùng nguồn 3,3~V & Đạt \\
 Khuếch đại dùng op-amp & $\approx 60$~dB & 62,4~dB @1~Hz (AD8608) & Đạt \\
 Lọc thông thấp dùng op-amp & Loại nhiễu tần số cao & Sallen-Key bậc 2; 50~Hz: $-47$~dB; 1~kHz: $-137$~dB & Đạt \\
 Mức ra khi không có chuyển động & 1,5~V & 1,4992~V & Đạt \\
 Dải ra khi có chuyển động & 0 -- 3~V & 0,32 -- 2,55~V; giới hạn cứng 3,0~V & Đạt \\
-Một project LTspice duy nhất & 1 file & \texttt{PIR\_LHI778.asc} & Đạt \\
+Một project LTspice duy nhất & 1 file & \texttt{PIR\_PYD1378.asc} & Đạt \\
 \bottomrule
 \end{tabularx}
 \end{table}

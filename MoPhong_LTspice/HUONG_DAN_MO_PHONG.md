@@ -1,4 +1,4 @@
-# Hướng dẫn chạy mô phỏng PIR LHI778 và tạo tín hiệu chuyển động
+# Hướng dẫn chạy mô phỏng PIR PYD1378 và tạo tín hiệu chuyển động
 
 Tài liệu này chỉ nêu **các bước thao tác** trong LTspice:
 
@@ -6,7 +6,7 @@ Tài liệu này chỉ nêu **các bước thao tác** trong LTspice:
 - xem kết quả;
 - tạo và sửa tín hiệu đầu vào (tín hiệu mô phỏng chuyển động).
 
-Toàn bộ mô phỏng nằm trong một file: `PIR_LHI778.asc`.
+Toàn bộ mô phỏng nằm trong một file: `PIR_PYD1378.asc`.
 
 ---
 
@@ -17,8 +17,8 @@ Toàn bộ mô phỏng nằm trong một file: `PIR_LHI778.asc`.
 
 | File | Dùng để
 |---|---|
-| `PIR_LHI778.asc` | Sơ đồ mạch và các lệnh mô phỏng — **file cần mở** |
-| `PIR_LHI778.plt` | Cấu hình đồ thị, LTspice tự nạp sau khi chạy. Để cùng thư mục với file `.asc` |
+| `PIR_PYD1378.asc` | Sơ đồ mạch và các lệnh mô phỏng — **file cần mở** |
+| `PIR_PYD1378.plt` | Cấu hình đồ thị, LTspice tự nạp sau khi chạy. Để cùng thư mục với file `.asc` |
 | `.raw`, `.log`, `.net`, `.db`, `.op.raw` | File kết quả, tự tạo lại mỗi lần chạy. Xóa đi cũng được |
 | `ket_qua/*.svg` | Đồ thị đã xuất sẵn |
 
@@ -26,7 +26,7 @@ Toàn bộ mô phỏng nằm trong một file: `PIR_LHI778.asc`.
 
 ## 2. Chạy mô phỏng theo thời gian
 
-1. Nhấp đúp vào `PIR_LHI778.asc` (hoặc trong LTspice chọn **File → Open**).
+1. Nhấp đúp vào `PIR_PYD1378.asc` (hoặc trong LTspice chọn **File → Open**).
 2. Chọn **Simulate → Run** (hoặc bấm nút hình người chạy).
 3. Đợi khoảng 15–30 s.
 4. Cửa sổ đồ thị tự mở, gồm 4 ô:
@@ -34,7 +34,7 @@ Toàn bộ mô phỏng nằm trong một file: `PIR_LHI778.asc`.
    | Ô | Tín hiệu |
    |---|---|
    | 1 | `V(pa)`, `V(pb)` — tín hiệu vào của phần tử A và B |
-   | 2 | `V(s)` — chân S của LHI778 |
+   | 2 | `V(s)` — chân S của PYD1378 |
    | 3 | `V(a2)`, `V(a3)` — trước và sau mạch lọc |
    | 4 | `V(out)` — đầu ra |
 
@@ -69,7 +69,7 @@ Tên các nút có thể đo:
 |---|---|
 | `PA`, `PB` | Tín hiệu vào của phần tử A, B (1 V = 1 µW) |
 | `TA`, `TB` | Nhiệt độ phần tử (1 V = 1 K) |
-| `G`, `M`, `S` | Bên trong LHI778 và chân ra S |
+| `G`, `M`, `S` | Bên trong PYD1378 và chân ra S |
 | `SN` | Chân S sau khi cộng nhiễu |
 | `A1`, `A2`, `A3` | Ra tầng khuếch đại 1, tầng 2, mạch lọc |
 | `OUT` | Đầu ra cuối |
@@ -216,7 +216,7 @@ Muốn thêm kịch bản **đi xuôi chiều** thì đảo lại: `+P6*walk(x,S
 |---|---|---|
 | Tắt nhiễu | `NOISE=0` (khối **NHIEU**) | `1` |
 | Đổi biên độ nhiễu 50 Hz / 1 kHz / nhiễu trắng | `A50`, `AHF`, `AWN` | `50u`, `50u`, `10u` |
-| Đổi độ lệch 2 phần tử | `MISM` (khối **THONG SO MO HINH LHI778**) | `0.01` |
+| Đổi độ lệch 2 phần tử | `MISM` (khối **THONG SO MO HINH PYD1378**) | `0.01` |
 | Đổi giá trị linh kiện | Chuột phải vào con số cạnh linh kiện → gõ giá trị mới | — |
 | Chạy nhanh hơn | `NOISE=0` và sửa `.tran 0 40 0 0.1m` thành `.tran 0 40 0 1m` | — |
 
@@ -231,6 +231,6 @@ Muốn thêm kịch bản **đi xuôi chiều** thì đảo lại: `+P6*walk(x,S
 | `V(s)` khác xa 0.81 V | Kiểm tra dòng `.options gmin=1e-15` còn trong khối **MO PHONG** |
 | `V(out)` dính sát 0 V hoặc 3 V | Giảm `P` của kịch bản đó |
 | Bấm vào dây không ra đồ thị | Xóa dòng `.save`, chạy lại |
-| Không tự hiện 4 ô đồ thị | Để `PIR_LHI778.plt` cùng thư mục với `PIR_LHI778.asc` |
+| Không tự hiện 4 ô đồ thị | Để `PIR_PYD1378.plt` cùng thư mục với `PIR_PYD1378.asc` |
 | Số đo `.meas` báo lỗi | Sửa `FROM … TO …` cho khớp thời gian kịch bản |
 | Log có `Length shorter than recommended…` hoặc `Source stepping succeeded` | Bình thường, bỏ qua |

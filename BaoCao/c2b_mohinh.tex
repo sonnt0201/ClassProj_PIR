@@ -1,16 +1,16 @@
 % ---------------------------------------------------------------------
-\section{Xây dựng mô hình mô phỏng của \LHI{}}
+\section{Xây dựng mô hình mô phỏng của \PYD{}}
 \label{sec:mohinh}
 % ---------------------------------------------------------------------
 
-Nhà sản xuất không cung cấp mô hình SPICE cho \LHI{}. Vì vậy em xây dựng một mô hình vật lý dựa trên các phương trình ở mục~\ref{sec:mohinhtoan}, rồi chọn thông số sao cho đáp ứng của mô hình khớp với datasheet. Mô hình gồm ba phần, đúng theo cấu tạo thật của cảm biến:
+Nhà sản xuất không cung cấp mô hình SPICE cho \PYD{}. Vì vậy em xây dựng một mô hình vật lý dựa trên các phương trình ở mục~\ref{sec:mohinhtoan}, rồi chọn thông số sao cho đáp ứng của mô hình khớp với datasheet. Mô hình gồm ba phần, đúng theo cấu tạo thật của cảm biến:
 \begin{enumerate}
   \item \textbf{mô hình nhiệt} của từng phần tử A, B (phương trình~\eqref{eq:nhiet});
   \item \textbf{hai phần tử nhiệt điện} nối tiếp ngược cực, mỗi phần tử là nguồn dòng $i_p = pA\,\dd T/\dd t$ song song với $C_E$ (phương trình~\eqref{eq:ip});
   \item \textbf{điện trở cổng $R_G$, JFET lặp nguồn, tụ $C_\text{EMI}$} và các chân D, S, G.
 \end{enumerate}
 
-\subsection{Hàm truyền của \LHI{} tại chân S}
+\subsection{Hàm truyền của \PYD{} tại chân S}
 
 Kết hợp hàm truyền của một đầu thu \eqref{eq:Gs}, hệ số $1/2$ của cấu hình phần tử kép \eqref{eq:dual} và hệ số truyền của mạch lặp nguồn \eqref{eq:Asf}, độ nhạy tại chân S khi chỉ phần tử A được chiếu là:
 \begin{gather}
@@ -22,7 +22,7 @@ Mô hình có ba thông số quyết định hình dạng đáp ứng: hằng s�
 
 \subsection{Xác định thông số từ đồ thị datasheet}
 
-Datasheet \LHI{} \cite{lhi778-ds} có đồ thị độ nhạy theo tần số (0,01 -- 10~Hz). Đọc từ đồ thị được các điểm sau: $R_V(0{,}01\,\text{Hz}) \approx 2{,}4$~kV/W; cực đại khoảng 12~kV/W tại $f_p \approx 0{,}13$~Hz; $R_V(1\,\text{Hz}) = 4{,}0$~kV/W (cũng là giá trị điển hình trong bảng thông số); $R_V(10\,\text{Hz}) \approx 0{,}38$~kV/W. Từ đó xác định thông số theo các bước:
+Datasheet \PYD{} \cite{pyd1378-ds} có đồ thị độ nhạy theo tần số (0,01 -- 10~Hz). Đọc từ đồ thị được các điểm sau: $R_V(0{,}01\,\text{Hz}) \approx 2{,}4$~kV/W; cực đại khoảng 12~kV/W tại $f_p \approx 0{,}13$~Hz; $R_V(1\,\text{Hz}) = 4{,}0$~kV/W (cũng là giá trị điển hình trong bảng thông số); $R_V(10\,\text{Hz}) \approx 0{,}38$~kV/W. Từ đó xác định thông số theo các bước:
 
 \begin{enumerate}
   \item Tỉ số $R_V(10\,\text{Hz})/R_V(1\,\text{Hz}) \approx 0{,}095 \approx 1/10$. Độ nhạy giảm đúng 20~dB/decade, chứng tỏ cả hai tần số cắt $1/(2\pi\tau_T)$ và $1/(2\pi\tau_E)$ đều nằm dưới 1~Hz.
@@ -56,7 +56,7 @@ Từ ba đại lượng $\tau_T$, $\tau_E$, $K_S$, em chọn bộ thông số v�
 
 \begin{table}[!htb]
 \centering
-\caption{Thông số mô hình \LHI{} dùng trong LTspice}
+\caption{Thông số mô hình \PYD{} dùng trong LTspice}
 \label{tab:thongsomohinh}
 \small
 \begin{tabularx}{\textwidth}{@{}p{4.6cm}p{2.6cm}L@{}}
@@ -94,7 +94,7 @@ Chạy phân tích AC với công suất tới phần tử A bằng 1~µW, rồi
 
 \begin{table}[!htb]
 \centering
-\caption{So sánh độ nhạy của mô hình với datasheet \LHI{}}
+\caption{So sánh độ nhạy của mô hình với datasheet \PYD{}}
 \label{tab:kiemchung}
 \small
 \begin{tabular}{@{}lccc@{}}
@@ -120,14 +120,14 @@ Trở kháng ra & 5~kΩ (điển hình) & 5,1~kΩ & $+2$\% \\
   \addplot[c1,very thick] table[x=f,y=R] {data/ac.dat};
   \addlegendentry{Mô hình LTspice, $V_S$ khi $P_A = 1$ µW}
   \addplot[only marks,mark=*,mark size=3pt,c2] coordinates {(0.01,2.4) (0.13,12) (1,4.0) (10,0.38)};
-  \addlegendentry{Datasheet \LHI{} (đọc đồ thị)}
+  \addlegendentry{Datasheet \PYD{} (đọc đồ thị)}
   \addplot[cgray,dashed,domain=0.01:10,samples=2] {39000*2*pi*x/1000};
   \addlegendentry{Tiệm cận $+20$ dB/dec}
   \addplot[cgray,dotted,thick,domain=0.01:10,samples=2] {39000/(2*pi*x*1.5)/1000};
   \addlegendentry{Tiệm cận $-20$ dB/dec}
 \end{loglogaxis}
 \end{tikzpicture}
-\caption{Độ nhạy của mô hình \LHI{} theo tần số so với datasheet}
+\caption{Độ nhạy của mô hình \PYD{} theo tần số so với datasheet}
 \label{fig:dapungcb}
 \end{figure}
 

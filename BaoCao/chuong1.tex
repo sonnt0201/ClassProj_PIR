@@ -15,7 +15,7 @@ Phát hiện sự có mặt và chuyển động của con người là một b�
 
 Trong các ứng dụng này, cảm biến phải chạy liên tục nhiều năm, thường bằng pin, và phải rẻ. Nó chỉ cần trả lời câu hỏi ``có người đang di chuyển trong vùng quan sát hay không'', không cần nhận dạng. Cảm biến hồng ngoại thụ động PIR đáp ứng rất tốt các yêu cầu này, nên đây là loại cảm biến phát hiện chuyển động được dùng nhiều nhất.
 
-Đầu thu PIR bản chất là một \emph{cảm biến nhiệt}: nó biến sự thay đổi của công suất bức xạ hồng ngoại chiếu tới thành một tín hiệu điện. Tín hiệu này rất nhỏ và chậm, nên một hệ thống PIR hoàn chỉnh luôn gồm hai phần: \emph{đầu thu} và \emph{mạch chuẩn hóa tín hiệu} (khuếch đại, lọc, dịch mức). Đề tài này tập trung vào cả hai phần: hiểu nguyên lý đo của đầu thu \LHI{} và thiết kế mạch chuẩn hóa tín hiệu cho nó.
+Đầu thu PIR bản chất là một \emph{cảm biến nhiệt}: nó biến sự thay đổi của công suất bức xạ hồng ngoại chiếu tới thành một tín hiệu điện. Tín hiệu này rất nhỏ và chậm, nên một hệ thống PIR hoàn chỉnh luôn gồm hai phần: \emph{đầu thu} và \emph{mạch chuẩn hóa tín hiệu} (khuếch đại, lọc, dịch mức). Đề tài này tập trung vào cả hai phần: hiểu nguyên lý đo của đầu thu \PYD{} và thiết kế mạch chuẩn hóa tín hiệu cho nó.
 
 \section{Các phương pháp phát hiện chuyển động}
 
@@ -113,12 +113,12 @@ Lấy ví dụ $\Delta M_\text{band} \approx 21$~W/m$^2$, $\tau_L = 0{,}5$, $A_L
 \begin{equation*}
   \boxed{\Delta P \approx 0{,}05 \text{ -- } 1~\text{µW}}
 \end{equation*}
-Đây là bậc độ lớn của tín hiệu vào mà mạch phải xử lý. Với độ nhạy của \LHI{} khoảng 4~kV/W (mục~\ref{sec:chonsensor}), điện áp ra của cảm biến chỉ vào cỡ \emph{vài trăm µV đến vài mV}. Con số này phù hợp với tài liệu \cite{st-an4368}, trong đó tín hiệu PIR điển hình được nêu là khoảng 1~mV đỉnh -- đỉnh.
+Đây là bậc độ lớn của tín hiệu vào mà mạch phải xử lý. Với độ nhạy của \PYD{} khoảng 4~kV/W (mục~\ref{sec:chonsensor}), điện áp ra của cảm biến chỉ vào cỡ \emph{vài trăm µV đến vài mV}. Con số này phù hợp với tài liệu \cite{st-an4368}, trong đó tín hiệu PIR điển hình được nêu là khoảng 1~mV đỉnh -- đỉnh.
 
 \subsection{Tần số của tín hiệu chuyển động}
 \label{sec:tanso}
 
-Khi người đi ngang qua vùng quan sát, ảnh của người lướt qua các phần tử cảm biến. Gọi $v$ là vận tốc người, $D$ là khoảng cách tới cảm biến, $a$ là khoảng cách giữa tâm hai phần tử ($a = 2$~mm với \LHI{}). Thời gian để ảnh đi từ phần tử này sang phần tử kia là:
+Khi người đi ngang qua vùng quan sát, ảnh của người lướt qua các phần tử cảm biến. Gọi $v$ là vận tốc người, $D$ là khoảng cách tới cảm biến, $a$ là khoảng cách giữa tâm hai phần tử ($a = 2$~mm với \PYD{}). Thời gian để ảnh đi từ phần tử này sang phần tử kia là:
 \begin{equation}
   \Delta t = \frac{a/f_L}{v/D} = \frac{a\,D}{f_L\,v}.
   \label{eq:deltat}
@@ -134,7 +134,7 @@ Với $f_L = 20$~mm:
   \item người đi chậm ở xa, $v = 0{,}3$~m/s, $D = 10$~m: $f_s \approx 0{,}15$~Hz;
   \item người đi nhanh ở gần, $v = 2$~m/s, $D = 1{,}5$~m: $f_s \approx 6{,}7$~Hz.
 \end{itemize}
-Như vậy, tín hiệu chuyển động của người nằm trong dải khoảng \textbf{0,1 -- 10~Hz}. Các nhà sản xuất cũng đo nhiễu của cảm biến trong dải 0,3 -- 10~Hz hoặc 0,4 -- 10~Hz \cite{lhi778-ds,pyd1378}. Mọi thành phần nằm ngoài dải này (điện một chiều, trôi nhiệt rất chậm, nhiễu 50~Hz, nhiễu tần số cao) đều là nhiễu cần loại bỏ.
+Như vậy, tín hiệu chuyển động của người nằm trong dải khoảng \textbf{0,1 -- 10~Hz}. Các nhà sản xuất cũng đo nhiễu của cảm biến trong dải 0,3 -- 10~Hz hoặc 0,4 -- 10~Hz \cite{pyd1378-ds,pyd1378}. Mọi thành phần nằm ngoài dải này (điện một chiều, trôi nhiệt rất chậm, nhiễu 50~Hz, nhiễu tần số cao) đều là nhiễu cần loại bỏ.
 
 \section{Các loại đầu thu hồng ngoại nhiệt}
 
@@ -143,24 +143,23 @@ Có ba loại đầu thu nhiệt chính cho vùng hồng ngoại xa \cite{fraden
 \section{Lựa chọn cảm biến}
 \label{sec:chonsensor}
 
-\subsection{Họ cảm biến LHi của PerkinElmer / Excelitas}
+\subsection{Họ cảm biến PYD của PerkinElmer / Excelitas}
 
-\LHI{} là đầu thu nhiệt điện hai phần tử (dual element) do hãng PerkinElmer sản xuất. Mảng cảm biến này sau đó chuyển sang Excelitas Technologies. Họ sản phẩm gồm \cite{lhi778-ds,lhi-family,pyd1378}:
+\PYD{} là đầu thu nhiệt điện hai phần tử (dual element) do hãng PerkinElmer sản xuất. Mảng cảm biến này sau đó chuyển sang Excelitas Technologies. Họ sản phẩm gồm \cite{pyd1378-ds,pyd-family,pyd1378}:
 \begin{itemize}
-  \item \textbf{\LHI{}}: bản giá thấp, vỏ TO-5, cửa sổ nhỏ, trường nhìn 139° (theo datasheet 2001) hoặc 71° không bị che;
-  \item \textbf{LHi 878} và \textbf{PYD 1388}: cùng thông số điện, cửa sổ lớn hơn (trường nhìn 95°), có bản chống nhiễu điện từ tốt hơn;
-  \item \textbf{LHi 968} (nay là PYD 1398): bản cao cấp cho báo động chống trộm, chống nhiễu ánh sáng trắng;
-  \item \textbf{PYD 1378}: mã thay thế chính thức cho \LHI{} trong danh mục sản phẩm hiện nay của Excelitas.
+  \item \textbf{\PYD{}}: bản giá thấp, vỏ TO-5, cửa sổ nhỏ, trường nhìn 139° (theo datasheet 2001) hoặc 71° không bị che;
+  \item \textbf{PYD 1388}: cùng thông số điện, cửa sổ lớn hơn (trường nhìn 95°), có bản chống nhiễu điện từ tốt hơn;
+  \item \textbf{PYD 1398}: bản cao cấp cho báo động chống trộm, chống nhiễu ánh sáng trắng.
 \end{itemize}
 
-\subsection{Thông số kỹ thuật của \LHI{}}
+\subsection{Thông số kỹ thuật của \PYD{}}
 
-Bảng~\ref{tab:lhi778} tổng hợp thông số từ datasheet \LHI{} \cite{lhi778-ds}, bảng thông số họ sản phẩm \cite{lhi-family} và datasheet của mã thay thế PYD 1378 \cite{pyd1378}.
+Bảng~\ref{tab:pyd1378} tổng hợp thông số từ datasheet \PYD{} của PerkinElmer \cite{pyd1378-ds}, bảng thông số họ sản phẩm \cite{pyd-family} và datasheet hiện hành của Excelitas \cite{pyd1378}.
 
 \begin{table}[!htb]
 \centering
-\caption{Thông số kỹ thuật của cảm biến \LHI{}}
-\label{tab:lhi778}
+\caption{Thông số kỹ thuật của cảm biến \PYD{}}
+\label{tab:pyd1378}
 \small
 \begin{tabularx}{\textwidth}{@{}p{4.2cm}ccc>{\raggedright\arraybackslash}X@{}}
 \toprule
@@ -181,13 +180,13 @@ Vỏ & \multicolumn{3}{c}{TO-5, 3 chân: D, S, G (vỏ)} & \\
 \end{tabularx}
 \end{table}
 
-\subsection{Lý do chọn \LHI{}}
+\subsection{Lý do chọn \PYD{}}
 
 \begin{itemize}
   \item Là đầu thu \emph{hai phần tử}: tự triệt tiêu các thay đổi nhiệt độ chung của môi trường và nhiễu ánh sáng, chỉ phản ứng với vật di chuyển.
   \item Tích hợp sẵn FET lặp nguồn: đầu ra có trở kháng khoảng 5~kΩ, nối trực tiếp được vào op-amp.
   \item Dải điện áp làm việc 2 -- 15~V, nên chạy tốt với nguồn 3,3~V của đề bài.
-  \item Độ nhạy cao (4~kV/W), nhiễu thấp (20~µV$_\text{pp}$), giá thấp, vỏ TO-5 tiêu chuẩn, có datasheet đầy đủ và có mã thay thế đang sản xuất (PYD 1378).
+  \item Độ nhạy cao (4~kV/W), nhiễu thấp (20~µV$_\text{pp}$), giá thấp, vỏ TO-5 tiêu chuẩn, có datasheet đầy đủ và vẫn đang được sản xuất.
 \end{itemize}
 
 \section{Yêu cầu thiết kế}
@@ -203,9 +202,9 @@ Yêu cầu của đề tài được tóm tắt trong bảng~\ref{tab:yeucau}.
 \begin{tabularx}{\textwidth}{@{}p{4.5cm}L@{}}
 \toprule
 \textbf{Hạng mục} & \textbf{Yêu cầu} \\ \midrule
-Cảm biến & \LHI{} (đầu thu + các chân ra D, S, G) \\
+Cảm biến & \PYD{} (đầu thu + các chân ra D, S, G) \\
 Tín hiệu vào & Mô phỏng tín hiệu chuyển động thực tế tác động lên cảm biến \\
-Mạch khuếch đại & Dùng op-amp để khuếch đại tín hiệu ra của \LHI{} \\
+Mạch khuếch đại & Dùng op-amp để khuếch đại tín hiệu ra của \PYD{} \\
 Mạch lọc & Lọc thông thấp dùng op-amp, loại nhiễu tần số cao biên độ nhỏ \\
 Nguồn cấp & Nguồn đơn 3,3~V \\
 Tín hiệu ra & Tương tự, trong khoảng 0 -- 3~V \\
@@ -235,7 +234,7 @@ Hình~\ref{fig:sodokhoi} trình bày sơ đồ khối của hệ thống đượ
   blk/.default=c1, ar/.style={-{Stealth[length=2.2mm]},thick}]
   \node[blk=c2,text width=1.6cm] (ng) {Người\\chuyển động};
   \node[blk=c2,text width=1.6cm,right=0.45cm of ng] (tk) {Thấu kính Fresnel};
-  \node[blk=c3,text width=2.0cm,right=0.45cm of tk] (cb) {Cảm biến \LHI{}\\(chân S)};
+  \node[blk=c3,text width=2.0cm,right=0.45cm of tk] (cb) {Cảm biến \PYD{}\\(chân S)};
   \node[blk,text width=1.9cm,right=0.45cm of cb] (kd) {Khuếch đại 2 tầng\\+ lọc thông cao};
   \node[blk,text width=1.55cm,right=0.45cm of kd] (lc) {Lọc thông thấp Sallen-Key};
   \node[blk,text width=1.3cm,right=0.45cm of lc] (ca) {Chia áp\\0 -- 3~V};
@@ -261,7 +260,7 @@ Hình~\ref{fig:sodokhoi} trình bày sơ đồ khối của hệ thống đượ
 Nhiệm vụ của từng khối như sau:
 \begin{enumerate}
   \item \textbf{Tín hiệu vào}: mô phỏng công suất bức xạ hồng ngoại $P_A(t)$, $P_B(t)$ chiếu lên hai phần tử khi người di chuyển qua các vùng của thấu kính.
-  \item \textbf{Cảm biến \LHI{}}: biến sự thay đổi bức xạ thành điện áp ở chân S (vài mV, chồng lên khoảng 0,8~V một chiều).
+  \item \textbf{Cảm biến \PYD{}}: biến sự thay đổi bức xạ thành điện áp ở chân S (vài mV, chồng lên khoảng 0,8~V một chiều).
   \item \textbf{Khuếch đại}: hai tầng op-amp không đảo. Chúng khuếch đại khoảng 1600 lần, chặn thành phần một chiều và dịch mức tín hiệu về quanh $\VREF$.
   \item \textbf{Lọc thông thấp}: bộ lọc Sallen-Key bậc 2 loại nhiễu tần số cao (50~Hz, 1~kHz, nhiễu trắng).
   \item \textbf{Chia áp đầu ra}: đưa dải 0 -- 3,3~V của op-amp về 0 -- 3,0~V, để mức nghỉ đúng bằng 1,5~V.
@@ -270,11 +269,11 @@ Nhiệm vụ của từng khối như sau:
 
 \section{Công cụ thực hiện và bố cục báo cáo}
 
-Toàn bộ hệ thống được mô phỏng trên phần mềm \textbf{LTspice 26.1} của Analog Devices \cite{ltspice}. Cảm biến \LHI{} không có mô hình SPICE do nhà sản xuất cung cấp. Vì vậy em tự xây dựng mô hình vật lý của cảm biến và hiệu chỉnh nó theo các thông số của datasheet (mục~\ref{sec:mohinh}). Op-amp dùng mô hình AD8608 có sẵn trong thư viện LTspice.
+Toàn bộ hệ thống được mô phỏng trên phần mềm \textbf{LTspice 26.1} của Analog Devices \cite{ltspice}. Cảm biến \PYD{} không có mô hình SPICE do nhà sản xuất cung cấp. Vì vậy em tự xây dựng mô hình vật lý của cảm biến và hiệu chỉnh nó theo các thông số của datasheet (mục~\ref{sec:mohinh}). Op-amp dùng mô hình AD8608 có sẵn trong thư viện LTspice.
 
 Phần còn lại của báo cáo gồm:
 \begin{itemize}
-  \item \textbf{Chương 2}: nguyên lý đo của đầu thu nhiệt điện, cấu tạo cảm biến \LHI{}, mô hình mô phỏng, tín hiệu vào, thiết kế và tính toán mạch chuẩn hóa tín hiệu, kết quả mô phỏng.
+  \item \textbf{Chương 2}: nguyên lý đo của đầu thu nhiệt điện, cấu tạo cảm biến \PYD{}, mô hình mô phỏng, tín hiệu vào, thiết kế và tính toán mạch chuẩn hóa tín hiệu, kết quả mô phỏng.
   \item \textbf{Chương 3}: tổng kết kết quả, hạn chế và hướng phát triển.
   \item \textbf{Phụ lục}: thông số mô hình và các lệnh mô phỏng LTspice.
 \end{itemize}

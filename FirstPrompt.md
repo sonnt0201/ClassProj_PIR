@@ -2,19 +2,19 @@
 
 ## Mô phỏng
 
-Tạo  1 project LTSpice mô phỏng mạch cảm biến cho LHI778 (PIR) bao gồm:
+Tạo  1 project LTSpice mô phỏng mạch cảm biến cho PYD1378 (PIR) bao gồm:
 
-### Mô phỏng đầu thu cảm biến LHI778
+### Mô phỏng đầu thu cảm biến PYD1378
 
-Thiết kế mạch mô phỏng nguyên lý cho LHI778 bao gồm đầu thu và các chân đầu ra
+Thiết kế mạch mô phỏng nguyên lý cho PYD1378 bao gồm đầu thu và các chân đầu ra
 
 Đồng thời mô phỏng tín hiệu đầu vào (tín hiệu chuyển động trong thực tế tác động lên đầu vào cảm biến), đảm bảo đầu ra tương ứng đúng với nguyên lý của cảm biến. 
 
-### Mạch cảm biến cho LHI778
+### Mạch cảm biến cho PYD1378
 
-Sau khi đã mô phỏng được đầu thu kèm tín hiệu đầu vào, đảm bảo đầu ra đúng nguyên lý của LHI778, bạn tiến hành thiết kế mạch khuếch đại là mạch lọc cho đầu thu cảm biến này.
+Sau khi đã mô phỏng được đầu thu kèm tín hiệu đầu vào, đảm bảo đầu ra đúng nguyên lý của PYD1378, bạn tiến hành thiết kế mạch khuếch đại là mạch lọc cho đầu thu cảm biến này.
 
-- Mạch khuếch đại: khuếch đại đầu ra của LHI778 sử dụng mạch khuếch đại Op Amp.
+- Mạch khuếch đại: khuếch đại đầu ra của PYD1378 sử dụng mạch khuếch đại Op Amp.
 
 - Mạch lọc: mạch lọc thông thấp (lọc nhiễu là tần số cao biên độ nhỏ, nên sử dụng op amp).
 

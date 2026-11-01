@@ -1,6 +1,6 @@
 LTspice 26.1.1 for Windows
-Circuit: D:\User\Documents\Cảm biến và xử lý tín hiệu đo\MoPhong_LTspice\PIR_LHI778.net
-Start Time: Wed Sep 30 22:44:31 2026
+Circuit: D:\User\Desktop\Repos\ClassProj_PIR\MoPhong_LTspice\PIR_PYD1378.net
+Start Time: Sun Oct 18 20:52:35 2026
 Options:gmin=1e-15
 solver = Normal
 Maximum thread count: 8
@@ -38,11 +38,11 @@ Gmin stepping failed to find operating point. Use".option gminsteps=0" to skip a
 Starting source stepping with srcstepmethod=0
 Source stepping succeeded in finding the operating point.
 
-Total elapsed time: 23.223 seconds.
+Total elapsed time: 20.151 seconds.
 Total iterations: 813463
 
 Files loaded:
-D:\User\Documents\Cảm biến và xử lý tín hiệu đo\MoPhong_LTspice\PIR_LHI778.net
+D:\User\Desktop\Repos\ClassProj_PIR\MoPhong_LTspice\PIR_PYD1378.net
 C:\Users\Admin\AppData\Local\LTspice\lib\cmp\standard.jft
 C:\Users\Admin\AppData\Local\LTspice\lib\sub\ADI.lib
 

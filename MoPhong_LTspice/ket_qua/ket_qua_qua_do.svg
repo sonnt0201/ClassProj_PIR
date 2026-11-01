@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="740" viewBox="0 0 1180 740" font-family="Segoe UI, Arial, sans-serif"><rect width="1180" height="740" fill="#fff"/><text x="20" y="28" font-size="18" font-weight="700" fill="#1f2328">Mo phong qua do 40 s: LHI778 + khuech dai + loc (nguon 3.3 V)</text><text x="90" y="60" font-size="15" font-weight="600" fill="#1f2328">1) Buc xa IR toi 2 phan tu (kich thich chuyen dong)</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="740" viewBox="0 0 1180 740" font-family="Segoe UI, Arial, sans-serif"><rect width="1180" height="740" fill="#fff"/><text x="20" y="28" font-size="18" font-weight="700" fill="#1f2328">Mo phong qua do 40 s: PYD1378 + khuech dai + loc (nguon 3.3 V)</text><text x="90" y="60" font-size="15" font-weight="600" fill="#1f2328">1) Buc xa IR toi 2 phan tu (kich thich chuyen dong)</text>
 <line x1="90" y1="213.5" x2="1150" y2="213.5" stroke="#d0d7de" stroke-width="1"/>
 <text x="84" y="217.5" font-size="12" text-anchor="end" fill="#57606a">0</text>
 <line x1="90" y1="180.9" x2="1150" y2="180.9" stroke="#d0d7de" stroke-width="1"/>
@@ -49,7 +49,7 @@
 <text x="132" y="110" font-size="12" fill="#1f2328">P_A (phan tu A)</text>
 <line x1="104" y1="123" x2="126" y2="123" stroke="#d1480f" stroke-width="2.5"/>
 <text x="132" y="127" font-size="12" fill="#1f2328">P_B (phan tu B)</text>
-<text x="90" y="270" font-size="15" font-weight="600" fill="#1f2328">2) Dien ap chan S cua LHI778 (co nhieu 50 Hz / 1 kHz / trang)</text>
+<text x="90" y="270" font-size="15" font-weight="600" fill="#1f2328">2) Dien ap chan S cua PYD1378 (co nhieu 50 Hz / 1 kHz / trang)</text>
 <line x1="90" y1="425.3" x2="1150" y2="425.3" stroke="#d0d7de" stroke-width="1"/>
 <text x="84" y="429.3" font-size="12" text-anchor="end" fill="#57606a">0.808</text>
 <line x1="90" y1="378.4" x2="1150" y2="378.4" stroke="#d0d7de" stroke-width="1"/>

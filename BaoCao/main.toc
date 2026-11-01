@@ -13,10 +13,10 @@
 \contentsline {subsection}{\numberline {1.3.4}Tần số của tín hiệu chuyển động}{4}{subsection.1.3.4}%
 \contentsline {section}{\numberline {1.4}Các loại đầu thu hồng ngoại nhiệt}{4}{section.1.4}%
 \contentsline {section}{\numberline {1.5}Lựa chọn cảm biến}{4}{section.1.5}%
-\contentsline {subsection}{\numberline {1.5.1}Họ cảm biến LHi của PerkinElmer / Excelitas}{4}{subsection.1.5.1}%
-\contentsline {subsection}{\numberline {1.5.2}Thông số kỹ thuật của LHi~778{}}{5}{subsection.1.5.2}%
-\contentsline {subsection}{\numberline {1.5.3}Lý do chọn LHi~778{}}{5}{subsection.1.5.3}%
-\contentsline {section}{\numberline {1.6}Yêu cầu thiết kế}{6}{section.1.6}%
+\contentsline {subsection}{\numberline {1.5.1}Họ cảm biến PYD của PerkinElmer / Excelitas}{4}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}Thông số kỹ thuật của PYD~1378{}}{5}{subsection.1.5.2}%
+\contentsline {subsection}{\numberline {1.5.3}Lý do chọn PYD~1378{}}{5}{subsection.1.5.3}%
+\contentsline {section}{\numberline {1.6}Yêu cầu thiết kế}{5}{section.1.6}%
 \contentsline {section}{\numberline {1.7}Sơ đồ khối của hệ thống}{6}{section.1.7}%
 \contentsline {section}{\numberline {1.8}Công cụ thực hiện và bố cục báo cáo}{7}{section.1.8}%
 \contentsline {chapter}{\numberline {2}NGUYÊN LÝ ĐO, CẤU TẠO CẢM BIẾN VÀ THIẾT KẾ MẠCH CHUẨN HÓA TÍN HIỆU}{8}{chapter.2}%
@@ -28,13 +28,13 @@
 \contentsline {subsection}{\numberline {2.2.2}Chuyển đổi nhiệt -- điện và dòng -- áp}{10}{subsection.2.2.2}%
 \contentsline {subsection}{\numberline {2.2.3}Hàm truyền và độ nhạy của đầu thu}{11}{subsection.2.2.3}%
 \contentsline {subsection}{\numberline {2.2.4}Đáp ứng với bức xạ dạng bậc thang}{11}{subsection.2.2.4}%
-\contentsline {section}{\numberline {2.3}Cấu tạo cảm biến LHi~778{}}{12}{section.2.3}%
+\contentsline {section}{\numberline {2.3}Cấu tạo cảm biến PYD~1378{}}{12}{section.2.3}%
 \contentsline {subsection}{\numberline {2.3.1}Cấu tạo cơ khí và sơ đồ chân}{12}{subsection.2.3.1}%
 \contentsline {subsection}{\numberline {2.3.2}Mạch điện bên trong}{12}{subsection.2.3.2}%
 \contentsline {subsection}{\numberline {2.3.3}Nguyên lý phần tử kép (dual element)}{12}{subsection.2.3.3}%
 \contentsline {subsection}{\numberline {2.3.4}Mạch lặp nguồn dùng JFET}{13}{subsection.2.3.4}%
-\contentsline {section}{\numberline {2.4}Xây dựng mô hình mô phỏng của LHi~778{}}{15}{section.2.4}%
-\contentsline {subsection}{\numberline {2.4.1}Hàm truyền của LHi~778{} tại chân S}{15}{subsection.2.4.1}%
+\contentsline {section}{\numberline {2.4}Xây dựng mô hình mô phỏng của PYD~1378{}}{15}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Hàm truyền của PYD~1378{} tại chân S}{15}{subsection.2.4.1}%
 \contentsline {subsection}{\numberline {2.4.2}Xác định thông số từ đồ thị datasheet}{15}{subsection.2.4.2}%
 \contentsline {subsection}{\numberline {2.4.3}Thông số vật lý của mô hình}{16}{subsection.2.4.3}%
 \contentsline {subsection}{\numberline {2.4.4}Cài đặt mô hình trong LTspice}{16}{subsection.2.4.4}%
@@ -88,7 +88,7 @@
 \contentsline {chapter}{\nonumberline TÀI LIỆU THAM KHẢO}{41}{chapter*.61}%
 \def \@chapapp {\appendixname }
 \contentsline {chapter}{\numberline {A}CÁC LỆNH MÔ PHỎNG LTSPICE}{42}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Thông số mô hình LHi~778{}}{42}{appendix.A.1}%
+\contentsline {section}{\numberline {A.1}Thông số mô hình PYD~1378{}}{42}{appendix.A.1}%
 \contentsline {section}{\numberline {A.2}Tín hiệu vào (kịch bản chuyển động)}{42}{appendix.A.2}%
 \contentsline {section}{\numberline {A.3}Cách chạy mô phỏng}{42}{appendix.A.3}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

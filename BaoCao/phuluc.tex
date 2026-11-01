@@ -3,9 +3,9 @@
 \label{app:ltspice}
 % =====================================================================
 
-Phụ lục này liệt kê các khối lệnh SPICE đặt trên sơ đồ \texttt{PIR\_LHI778.asc}. Chúng định nghĩa thông số mô hình cảm biến, tín hiệu vào, nhiễu và các phép đo.
+Phụ lục này liệt kê các khối lệnh SPICE đặt trên sơ đồ \texttt{PIR\_PYD1378.asc}. Chúng định nghĩa thông số mô hình cảm biến, tín hiệu vào, nhiễu và các phép đo.
 
-\section{Thông số mô hình \LHI{}}
+\section{Thông số mô hình \PYD{}}
 {\small
 \begin{verbatim}
 .param AEL=2e-6    ; dien tich 1 phan tu 2x1 mm2 [m2]
@@ -19,7 +19,7 @@ Phụ lục này liệt kê các khối lệnh SPICE đặt trên sơ đồ \tex
 .param HTH={CV*AEL*DEL}              ; nhiet dung H [J/K]
 .param GTH={HTH/TAUT}                ; do dan nhiet G [W/K]
 .param CE={EPSR*8.854e-12*AEL/DEL}   ; dien dung 1 phan tu [F]
-.model JLHI NJF(Vto=-1.0 Beta=4.5e-4 Lambda=0.02 Cgs=2p Cgd=1p Is=1e-15)
+.model JPYD NJF(Vto=-1.0 Beta=4.5e-4 Lambda=0.02 Cgs=2p Cgd=1p Is=1e-15)
 \end{verbatim}
 }
 
@@ -46,7 +46,7 @@ Phụ lục này liệt kê các khối lệnh SPICE đặt trên sơ đồ \tex
 
 \section{Cách chạy mô phỏng}
 \begin{enumerate}
-  \item Mở file \texttt{MoPhong\_LTspice/PIR\_LHI778.asc} bằng LTspice (bản 24 trở lên).
+  \item Mở file \texttt{MoPhong\_LTspice/PIR\_PYD1378.asc} bằng LTspice (bản 24 trở lên).
   \item Chọn \textbf{Simulate $\to$ Run}. Sau khoảng 15 -- 30~s, cửa sổ đồ thị tự hiện bốn ô: $V(pa), V(pb)$; $V(s)$; $V(a2), V(a3)$; $V(out)$.
   \item Xem kết quả đo tự động ở \textbf{View $\to$ SPICE Error Log}.
   \item Để chạy phân tích tần số: đổi dòng \texttt{.tran} thành Comment và dòng \texttt{.ac} thành SPICE directive (chuột phải vào dòng lệnh), rồi chạy lại.

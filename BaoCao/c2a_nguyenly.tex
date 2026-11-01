@@ -78,12 +78,12 @@ LiTaO$_3$ (đơn tinh thể) & 2,3 & 47 & 3,2 & 0,17 \\
 Gốm PZT biến tính & 3,8 & 290 & 2,5 & 0,06 \\
 Màng PVDF & 0,27 & 12 & 2,4 & 0,11 \\
 \midrule
-Mô hình \LHI{} (đề tài) & 3,7 & 200 & 2,6 & 0,08 \\
+Mô hình \PYD{} (đề tài) & 3,7 & 200 & 2,6 & 0,08 \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\LHI{} dùng phần tử bằng gốm nhiệt điện (pyroceramic) \cite{lhi778-ds,pyd1378}. Gốm có $F_V$ không cao bằng TGS, nhưng rẻ, bền, không hút ẩm và dễ gia công. Nhờ bộ khuếch đại FET tích hợp, độ nhạy cuối cùng vẫn đạt vài kV/W.
+\PYD{} dùng phần tử bằng gốm nhiệt điện (pyroceramic) \cite{pyd1378-ds,pyd1378}. Gốm có $F_V$ không cao bằng TGS, nhưng rẻ, bền, không hút ẩm và dễ gia công. Nhờ bộ khuếch đại FET tích hợp, độ nhạy cuối cùng vẫn đạt vài kV/W.
 
 % ---------------------------------------------------------------------
 \section{Mô hình toán học của đầu thu nhiệt điện}
@@ -195,13 +195,13 @@ Giả sử một vật nóng xuất hiện rồi \emph{đứng yên}: công su�
 Điện áp tăng lên, đạt cực đại tại $t^* = \dfrac{\tau_T\tau_E}{\tau_E-\tau_T}\ln\dfrac{\tau_E}{\tau_T}$, rồi \emph{giảm dần về 0}, dù vật nóng vẫn còn đó. Đây là lý do cảm biến PIR không phát hiện được người đứng yên. Hiện tượng này được kiểm chứng bằng mô phỏng ở mục~\ref{sec:kq-sk45}.
 
 % ---------------------------------------------------------------------
-\section{Cấu tạo cảm biến \LHI{}}
+\section{Cấu tạo cảm biến \PYD{}}
 \label{sec:cautao}
 % ---------------------------------------------------------------------
 
 \subsection{Cấu tạo cơ khí và sơ đồ chân}
 
-\LHI{} được đóng trong vỏ kim loại TO-5 (đường kính 9,2~mm, cao 4,2~mm) \cite{lhi778-ds,pyd1378}. Phía trên có cửa sổ lọc hồng ngoại tiêu chuẩn, cắt các bước sóng ngắn hơn 5,5~µm (ánh sáng nhìn thấy, bức xạ của đèn) và cho qua trung bình trên 77\% trong dải 7,5 -- 13,5~µm. Bên dưới cửa sổ là hai phần tử gốm, mỗi phần tử $2\times1$~mm$^2$, đặt song song và cách nhau 1~mm (hình~\ref{fig:cokhi}). Vỏ kim loại được nối với chân G (GND) để chống nhiễu điện từ.
+\PYD{} được đóng trong vỏ kim loại TO-5 (đường kính 9,2~mm, cao 4,2~mm) \cite{pyd1378-ds,pyd1378}. Phía trên có cửa sổ lọc hồng ngoại tiêu chuẩn, cắt các bước sóng ngắn hơn 5,5~µm (ánh sáng nhìn thấy, bức xạ của đèn) và cho qua trung bình trên 77\% trong dải 7,5 -- 13,5~µm. Bên dưới cửa sổ là hai phần tử gốm, mỗi phần tử $2\times1$~mm$^2$, đặt song song và cách nhau 1~mm (hình~\ref{fig:cokhi}). Vỏ kim loại được nối với chân G (GND) để chống nhiễu điện từ.
 
 \begin{figure}[!htb]
 \centering
@@ -232,13 +232,13 @@ Giả sử một vật nóng xuất hiện rồi \emph{đứng yên}: công su�
     \node[below,align=center] at (0,-5.6) {Nhìn từ dưới\\D: drain, S: source, G: GND/vỏ};
   \end{scope}
 \end{tikzpicture}
-\caption{Cấu tạo cơ khí và sơ đồ chân của \LHI{} (vẽ lại theo \cite{lhi778-ds,pyd1378})}
+\caption{Cấu tạo cơ khí và sơ đồ chân của \PYD{} (vẽ lại theo \cite{pyd1378-ds,pyd1378})}
 \label{fig:cokhi}
 \end{figure}
 
 \subsection{Mạch điện bên trong}
 
-Sơ đồ điện bên trong \LHI{} (hình~\ref{fig:mangtrong}) gồm:
+Sơ đồ điện bên trong \PYD{} (hình~\ref{fig:mangtrong}) gồm:
 \begin{itemize}
   \item \textbf{Hai phần tử nhiệt điện A và B} mắc nối tiếp ngược cực (series opposed) giữa cực cổng G của FET và đất.
   \item \textbf{Điện trở cổng $R_G$} rất lớn (hàng chục GΩ): tạo đường một chiều cho cực cổng và xác định hằng số thời gian điện $\tau_E$.
@@ -267,7 +267,7 @@ Sơ đồ điện bên trong \LHI{} (hình~\ref{fig:mangtrong}) gồm:
   \node[font=\scriptsize] at (2.5,4.35) {G (cổng)};
   \node[font=\scriptsize] at (2.3,2.3) {M};
   \draw[dashed,cgray,rounded corners] (-2.3,-0.6) rectangle (8.2,5.9);
-  \node[cgray,anchor=north west,font=\footnotesize] at (-2.2,5.85) {\LHI{}};
+  \node[cgray,anchor=north west,font=\footnotesize] at (-2.2,5.85) {\PYD{}};
   % external
   \draw (9.6,5.3) node[ocirc]{} -- (10.8,5.3) node[right]{$V_{DD}=3{,}3$ V};
   \draw (9.6,2.6) node[ocirc]{} -- (10.8,2.6) to[R, l=$R_S$, a=\SI{47}{\kilo\ohm}] (10.8,0) node[ground]{};
@@ -275,7 +275,7 @@ Sơ đồ điện bên trong \LHI{} (hình~\ref{fig:mangtrong}) gồm:
   \draw (9.6,0) node[ocirc]{} -- (10.8,0);
   \draw[dotted] (8.6,5.3) -- (9.6,5.3) (8.6,2.6) -- (9.6,2.6) (8.6,0) -- (9.6,0);
 \end{circuitikz}
-\caption{Mạch điện bên trong \LHI{} và mạch ngoài}
+\caption{Mạch điện bên trong \PYD{} và mạch ngoài}
 \label{fig:mangtrong}
 \end{figure}
 

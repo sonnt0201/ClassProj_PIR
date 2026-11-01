@@ -1,0 +1,86 @@
+% =====================================================================
+%  EE6423 – Bản mô tả bài toán 1 trang (M0), theo Phụ lục A của project brief
+%  Biên dịch:  latexmk -xelatex EE6423_M0_MoTaBaiToan.tex
+% =====================================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{vietnamese}
+\setmainfont{Times New Roman}
+\usepackage{amsmath}
+\usepackage{unicode-math}
+\setmathfont{TeX Gyre Termes Math}
+\usepackage{icomma}
+\usepackage[a4paper,left=2cm,right=2cm,top=1.5cm,bottom=1.5cm]{geometry}
+\usepackage{enumitem}
+\usepackage{tabularx,booktabs}
+\usepackage{xcolor}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt}
+\setlist{nosep,leftmargin=1.2em}
+\newcommand{\muc}[1]{\par\smallskip\textbf{#1}\enspace}
+\newcommand{\co}{\textbf{Có}}
+\newcommand{\cc}{\textbf{Chưa chắc}}
+
+\begin{document}
+
+\begin{center}
+  {\large\bfseries EE6423 – Bản mô tả bài toán (M0)}\\[2pt]
+  \textbf{Thành viên:} Nguyễn Thái Sơn – 20252373M \quad·\quad Vũ Minh Đức – 20252371M
+\end{center}
+\vspace{-4pt}\rule{\linewidth}{0.4pt}
+
+\muc{1. Tên bài toán:} Ước lượng tín hiệu chuyển động của người từ cảm biến hồng ngoại thụ động PYD~1378
+khi có nhiễu điện lưới 50~Hz, trôi nền nhiệt và nhiễu nội tại cùng dải tần với tín hiệu.
+
+\muc{2. Hệ và cảm biến:}
+\begin{itemize}
+  \item \emph{Hệ/thiết bị:} đầu báo chuyển động PIR gồm thấu kính Fresnel, cảm biến, mạch khuếch đại -- lọc analog
+        (62~dB, dải thông 0,5 -- 8,5~Hz, nguồn 3,3~V, đầu ra 0 -- 3~V, mức nghỉ 1,5~V), ADC 12~bit và xử lý số.
+  \item \emph{Cảm biến:} PYD~1378, đầu thu nhiệt điện hai phần tử A, B nối tiếp ngược cực, có FET lặp nguồn.
+        Nguyên lý: dòng nhiệt điện $i_p = pA\,\mathrm{d}T/\mathrm{d}t$, chỉ đáp ứng khi bức xạ thay đổi.
+        Độ nhạy 4~kV/W tại 1~Hz, nhiễu 20~µV$_\text{pp}$; đơn vị số đo: V.
+\end{itemize}
+
+\muc{3. Đại lượng cần ước lượng:} dạng sóng chuyển động $x[n]$ (V) do người đi qua vùng nhìn, gần tuần hoàn
+0,15 -- 6,7~Hz, biên độ 0,05 -- 1,5~V tại đầu ra. Từ $x[n]$ suy ra có/không có người và hướng đi.
+Số đo không cho trực tiếp $x[n]$ vì tín hiệu ở chân S chỉ vài mV và bị chồng bởi các nguồn nhiễu dưới đây.
+
+\muc{4. Các nguồn bất định dự kiến:}
+\begin{itemize}
+  \item Nhiễu điện lưới 50~Hz và các hài, cảm ứng lên dây nối và cực cổng trở kháng cao (thành phần tuần hoàn).
+  \item Trôi nền nhiệt (nhiệt độ phòng, nắng, luồng khí nóng) và lệch mức nghỉ do op-amp, sai số linh kiện (bias/drift).
+  \item Nhiễu nội tại của cảm biến (nhiễu nhiệt, nhiễu 1/f), bị định dạng bởi dải thông nên là nhiễu màu, trùng dải tín hiệu.
+  \item Nhiễu trắng của op-amp, điện trở và lượng tử hóa ADC (LSB 0,81~mV).
+\end{itemize}
+
+\muc{5. Các chế độ vận hành dự kiến:} (1) nghỉ, không có người, nền ổn định; (2) người đi qua với tốc độ và khoảng cách
+khác nhau, theo hai hướng; (3) điều kiện thay đổi: nền nhiệt tăng dần, thiết bị điện gần đó bật/tắt làm biên độ 50~Hz đổi.
+
+\muc{6. Nguồn dữ liệu và ground truth:} mô phỏng bằng Python (seed cố định, $f_s = 200$~Hz). Mô hình cảm biến lấy từ mô hình
+nhiệt -- điện đã hiệu chuẩn theo datasheet PYD~1378 và kiểm chứng trong LTspice (sai lệch độ nhạy dưới 10\%).
+Ground truth là $x[n]$ sạch của mô phỏng; chế độ nghỉ cho tham chiếu biết trước $x[n] = 0$.
+
+\muc{7. Tự kiểm tra theo checklist mục 4:}\\[2pt]
+\small
+\begin{tabularx}{\linewidth}{@{}p{3.4cm}p{1.6cm}X@{}}
+\toprule
+\textbf{Dòng} & \textbf{Trả lời} & \textbf{Lý do} \\ \midrule
+\multicolumn{3}{@{}l}{\textit{Hồi I – Hiểu nhiễu}} \\
+Nhiễu có cấu trúc & \co & Điện lưới 50~Hz (vạch phổ), trôi nền (bướu hẹp tại 0), nhiễu nội tại màu. \\
+Biết $f_s$ và chuỗi đo & \co & PYD~1378 $\to$ khuếch đại -- lọc analog $\to$ ADC 12~bit, $f_s = 200$~Hz $\to$ xử lý số. \\
+\multicolumn{3}{@{}l}{\textit{Hồi II – Học từ dữ liệu}} \\
+Tham số cần ước lượng & \co & Biên độ 50~Hz, bias, phương sai nhiễu, tham số tự tương quan của nhiễu nội tại. \\
+Dữ liệu hiệu chuẩn & \co & Chế độ nghỉ biết trước $x[n] = 0$; ground truth đầy đủ từ mô phỏng. \\
+\multicolumn{3}{@{}l}{\textit{Hồi III – Hành động}} \\
+Đại lượng theo thời gian & \co & $x[n]$ thay đổi theo thời gian và chìm trong nhiễu nội tại cùng dải tần. \\
+Mô hình thống kê/động học & \cc & $x[n]$ là chuỗi xung gần tuần hoàn; mô hình động học phù hợp cần kiểm chứng ở M2. \\
+Kịch bản thay đổi & \co & Nền nhiệt trôi, biên độ 50~Hz đổi khi bật/tắt thiết bị, tốc độ và khoảng cách người đổi. \\
+\multicolumn{3}{@{}l}{\textit{Đánh giá}} \\
+Có metric & \co & RMSE của $x[n]$ ước lượng so với ground truth, SNR trước/sau xử lý. \\
+$\ge 2$ phương án & \cc & Dự kiến có lọc theo thống kê dừng và lọc theo mô hình trạng thái; chọn ở M3. \\
+\bottomrule
+\end{tabularx}
+
+\end{document}
